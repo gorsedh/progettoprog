@@ -25,7 +25,7 @@ struct dailyReport {
     int daily_S_;
     int daily_I_;
     int daily_R_;
-	int daily_D_;
+    int daily_D_;
 
     dailyReport(int iS, int iI, int iR, int iD) : daily_S_(iS), daily_I_(iI), daily_R_(iR), daily_D_(iD) {}
 };
