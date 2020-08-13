@@ -17,7 +17,7 @@ double gammax = 0; //gammax scelto perchè c'era conflittualità in compilazione
 
 //strutture
 enum class Condition : char { //possible states
-    S, I, R
+    S, I, R, D
 };
 
 struct dailyReport {
@@ -25,8 +25,9 @@ struct dailyReport {
     int daily_S_;
     int daily_I_;
     int daily_R_;
+	int daily_D_;
 
-    dailyReport(int iS, int iI, int iR) : daily_S_(iS), daily_I_(iI), daily_R_(iR) {}
+    dailyReport(int iS, int iI, int iR, int iD) : daily_S_(iS), daily_I_(iI), daily_R_(iR), daily_D_(iD) {}
 };
 
 class Population { //create the board of states
@@ -80,7 +81,17 @@ public:
         }
         return rec;
     }
-
+    
+    int deadCounter() {
+		int dead = 0;
+		for (int i = 0; i < n_ * n_; i++) {
+            if (board_[i] == Condition::D) {
+                dead++;
+            }
+            else {}
+        }
+        return dead; 
+	}
 };
 
 struct ParametersCheck {
@@ -159,6 +170,10 @@ void gridPrint(Population& pop) { //sistemare gli output
                 std::cout << std::setw(1) << "\033[36mX\033[0m"
                     << "  ";
                 break;
+			case (Condition :: D):
+				std::cout << std::setw(1) << "\033[34mD\033[0m"
+				    << "  ";
+					break;
 
             default:
                 std::cout << "no cell selected" << '\n';
@@ -171,11 +186,11 @@ void gridPrint(Population& pop) { //sistemare gli output
 }
 
 void dataPrint(Population& pop) {
-    std::cout << "S = " << pop.susceptiblesCounter() << ", I = " << pop.infectsCounter() << ", R = " << pop.recoveredCounter() << "\n";
+    std::cout << "S = " << pop.susceptiblesCounter() << ", I = " << pop.infectsCounter() << ", R = " << pop.recoveredCounter() << ", D = " << pop.deadCounter() << "\n";
 }
 
 auto dataCollecting(Population& pop, std::vector<dailyReport>& finalReport) {
-    dailyReport day = dailyReport(pop.susceptiblesCounter(), pop.infectsCounter(), pop.recoveredCounter());
+    dailyReport day = dailyReport(pop.susceptiblesCounter(), pop.infectsCounter(), pop.recoveredCounter(), pop.deadCounter());
     finalReport.push_back(day);
 
 }
@@ -213,9 +228,12 @@ auto linearSpread(Population& previous) { //includere uno spread in cui i valori
             }
             case Condition::I: {
                 if (dis(gen) <= gammax) {
+					if (dis(gen) <= std::pow(gammax, 2)) {
+					evolved(row, column) = (Condition::D);
+					} else {
                     evolved(row, column) = (Condition::R);
                 }
-                else {
+				} else {
                     evolved(row, column) = previous(row, column);
                 }
                 break;
@@ -224,6 +242,11 @@ auto linearSpread(Population& previous) { //includere uno spread in cui i valori
                 evolved(row, column) = previous(row, column);
                 break;
             }
+			case Condition::D: {
+			evolved(row, column) = previous(row, column);
+                break;
+            }
+				
             default:
                 break;
             }
@@ -263,9 +286,10 @@ auto nonLinearSpread(Population& previous) {
                 break;
             }
             case Condition::I: {
-                if (dis(gen) <= gammax /((size * size - previousDayInfects) / (size * size))) { //rallenta la cura all'aumento dei contagiati
+                if (dis(gen) <= gammax /((size * size - previousDayInfects) / (size * size)) && dis(gen) > std::pow(gammax, 2)) { //rallenta la cura all'aumento dei contagiati
                     evolved(row, column) = (Condition::R);
-                }
+                } else if(dis(gen) <= gammax /((size * size - previousDayInfects) / (size * size)) && dis(gen) < std::pow(gammax, 2)) {
+					evolved(row, column) = (Condition::D); }
                 else {
                     evolved(row, column) = previous(row, column);
                 }
@@ -275,6 +299,11 @@ auto nonLinearSpread(Population& previous) {
                 evolved(row, column) = previous(row, column);
                 break;
             }
+            case Condition::D: {
+                evolved(row, column) = previous(row, column);
+                break;
+            }
+            
             default:
                 break;
             }
@@ -516,9 +545,9 @@ void printDataToFile(std::vector<dailyReport>& finalReport) {
     std::ofstream report;
     report.open("report.txt");
     report << 
-        "//Size is " << calculated_size <<", beta is " << beta << ", Gamma is " << gammax << "\n";
+        "//Size is " << calculated_size <<", beta is " << beta << ", Gamma is " << gammax <<  "\n";
     for (int i = 0; i < finalReport.size(); i++) {
-        report << i + 1 << std::setw(10) << finalReport[i].daily_S_ << std::setw(10) << finalReport[i].daily_I_ << std::setw(10) << finalReport[i].daily_R_ << "\n";
+        report << i + 1 << std::setw(10) << finalReport[i].daily_S_ << std::setw(10) << finalReport[i].daily_I_ << std::setw(10) << finalReport[i].daily_R_ << std::setw(10) << finalReport[i].daily_D_ << "\n";
     }
     report.close();
 }
@@ -578,6 +607,8 @@ int main()
 
 
 }
+
+// bisogna aggiungere nel report il dato del tasso di mortalità della simulazione 
 
 //la funzione clearBoard è virtualmente inutile, è stata utile in fase di debugging per trovare errori nel codice
 /*
