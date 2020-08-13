@@ -172,7 +172,7 @@ auto dataCollecting(Population& pop, std::vector<dailyReport>& finalReport) {
 
 //Type of spreadings
 
-auto linearSpread(Population& previous, double const& beta, double const& gammax) { //includere uno spread in cui i valori di gammax e beta variano a seconda del numero di malati?
+auto linearSpread(Population& previous) { //includere uno spread in cui i valori di gammax e beta variano a seconda del numero di malati?
     int size = previous.getSize();
     Population evolved(size);
     std::random_device seed;
@@ -222,7 +222,7 @@ auto linearSpread(Population& previous, double const& beta, double const& gammax
 
 //spread non lineare, maggiore il numero di malati più lenta la guarigione e più lento il contagio
 //i suscettibili si ammalano più lentamente, i malati guariscono più lentamente
-auto nonLinearSpread(Population& previous, double const& beta, double const& gammax) {
+auto nonLinearSpread(Population& previous) {
     int size = previous.getSize();
     Population evolved(size);
     std::random_device rd;
@@ -405,7 +405,7 @@ auto execute() {
     //far andare la funzione autonomamente
     while (pop.infectsCounter() != 0) {
         std::this_thread::sleep_for(std::chrono::milliseconds(800));
-        pop = linearSpread(pop, beta, gammax);
+        pop = linearSpread(pop);
         std::cout << "Day: " << dayspassed << "\n";
         gridPrint(pop);
         dataPrint(pop);
@@ -431,7 +431,7 @@ auto noGraphicsExecute() {
     //far andare la funzione autonomamente
     while (pop.infectsCounter() != 0) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        pop = linearSpread(pop, beta, gammax);
+        pop = linearSpread(pop);
         std::cout << "Day: " << dayspassed << "\n";
 
         dataPrint(pop);
@@ -455,7 +455,7 @@ auto bigSimulationExecute() {
     initializeInfect(pop);
     while (pop.infectsCounter() != 0) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        pop = nonLinearSpread(pop, beta, gammax);
+        pop = nonLinearSpread(pop);
 
         std::cout << "\n";
         dataCollecting(pop, finalReport);
