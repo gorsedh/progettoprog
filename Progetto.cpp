@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <vector>
 #include <chrono>
@@ -14,7 +13,7 @@
 //global variables
 double beta = 0;
 double gammax = 0; //gammax scelto perchè c'era conflittualità in compilazione da linea di comando
-//int size = 1;
+
 
 //strutture
 enum class Condition : char { //possible states
@@ -199,11 +198,13 @@ auto linearSpread(Population& previous) { //includere uno spread in cui i valori
             switch (cell) {
             case Condition::S: {
                 int i = 0;
+                
                 while (i != adjacentInfects(previous, row, column)) {
                     ++i;
+                    
                 }
                 if (i == adjacentInfects(previous, row, column) &&
-                    dis(gen) <= (((i - 8) / 7) * (1 - beta) + 1)) { //modello di spread lineare fra (1,beta) e (8,1)
+                    dis(gen) <= i* beta ) { //modello di spread lineare fra (0,0) e (1,beta) 
                     evolved(row, column) = (Condition::I);
                 }
                 else {
@@ -254,7 +255,7 @@ auto nonLinearSpread(Population& previous) {
                     ++i;
                 }
                 if (i == adjacentInfects(previous, row, column) &&
-                    dis(gen) <= (beta * i) / (((size * size + previousDayInfects) / (size * size)) ^ 2)) { //riduce infettività all'aumentare degli infetti
+                    dis(gen) <= ((beta * i)/ (((size * size + previousDayInfects) / (size * size)) ^ 2))) { //riduce infettività all'aumentare degli infetti
                     evolved(row, column) = (Condition::I);
                 }
                 else {
@@ -262,7 +263,7 @@ auto nonLinearSpread(Population& previous) {
                 break;
             }
             case Condition::I: {
-                if (dis(gen) <= gammax / ((size * size - previousDayInfects) / (size * size))) { //rallenta la cura all'aumento dei contagiati
+                if (dis(gen) <= gammax /*/ ((size * size - previousDayInfects) / (size * size))*/) { //rallenta la cura all'aumento dei contagiati
                     evolved(row, column) = (Condition::R);
                 }
                 else {
@@ -293,12 +294,12 @@ auto emptyBoard(Population& pop) {
 }
 
 //types of epidemics
-auto initializeCornerInfect(Population& pop) { //inizializzo un malato in 1,1 (2,2), questa parte verrà rimossa in seguito
+auto initializeCornerInfect(Population& pop) { //inizializzo un malato in 1,1 (2,2)
     pop(1, 1) = (Condition::I);
 }
 
-auto initializeInfect(Population& pop) { //inizializzo un malato in 1,1 (2,2), questa parte verrà rimossa in seguito
-    char option_; // how long it took the state to discover the pandemic
+auto initializeInfect(Population& pop) { 
+    char option_; 
     std::cout << "Choose how many infects you want in the population (type the number of the option): \n1) 1 Random infect on the board\n" <<
         "2) 10 random infects in a smaller portion of the grid \n3) manual number of random infects\nAny other key for 1 infect in a corner\n";
     std::cin >> option_;
@@ -311,24 +312,25 @@ auto initializeInfect(Population& pop) { //inizializzo un malato in 1,1 (2,2), q
         break;
     case '2':
 
-        for (int x = 0; x < 10; ++x) {
-            for (int y = 0; y <= 10; ++y) {
-                int i = (rand() + time(nullptr)) % (pop.getSize() / 2);
-                int j = (rand() + time(nullptr)) % (pop.getSize() / 2);
+        for (int x = 0; x < 10; x++) {
+           
+                int oddSize;
+                if (pop.getSize() % 2 == 0) { oddSize = pop.getSize(); }
+                else { oddSize = pop.getSize() - 1; }
+                int i = (rand() + time(nullptr)) % (oddSize / 2);
+                int j = (rand() + time(nullptr)) % (oddSize / 2);
                 pop(i, j) = (Condition::I);
-            } // print in a smaller grid 10 infects
+             // print in a smaller grid 10 infects
         }
         break;
     case '3':
         int numOfInfects;
         std::cout << "Instert number of infects\n";
         std::cin >> numOfInfects;
-        for (int x = 0; x <= numOfInfects; ++x) {
-            for (int y = 0; y <= numOfInfects; ++y) {
+        for (int x = 0; x <= numOfInfects; x++) {   
                 int i = (rand() + time(nullptr)) % (pop.getSize());
                 int j = (rand() + time(nullptr)) % (pop.getSize());
-                pop(i, j) = (Condition::I);
-            }
+                pop(i, j) = (Condition::I);   
         }
         break;
     default:
@@ -577,6 +579,7 @@ int main()
 
 }
 
+//la funzione clearBoard è virtualmente inutile, è stata utile in fase di debugging per trovare errori nel codice
 /*
 Considerazioni:
 
