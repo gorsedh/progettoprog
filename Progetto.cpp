@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <vector>
 #include <chrono>
@@ -35,7 +36,7 @@ private:
     std::vector<Condition> board_;
 
 public:
-    Population(int n) : n_(n), board_(n* n) {}
+    Population(int n) : n_(n), board_(n* n) {    } //
 
     Condition& operator() (int row, int column) {
         assert(column >= 0 && column < n_&& row >= 0 && row < n_);
@@ -282,15 +283,17 @@ auto nonLinearSpread(Population& previous) {
 }
 
 //initializations
-
-
-//types of epidemics
-auto initializeCornerInfect(Population& pop) { //inizializzo un malato in 1,1 (2,2), questa parte verrà rimossa in seguito
+auto emptyBoard(Population& pop) {
     for (int i = 0; i < pop.getSize(); i++) {
         for (int j = 0; j < pop.getSize(); j++) {
             pop(i, j) = (Condition::S);
         }
     }
+    
+}
+
+//types of epidemics
+auto initializeCornerInfect(Population& pop) { //inizializzo un malato in 1,1 (2,2), questa parte verrà rimossa in seguito
     pop(1, 1) = (Condition::I);
 }
 
@@ -432,6 +435,7 @@ auto checkParameters(ParametersCheck check) {
 auto execute(ParametersCheck check, int size) {
     Population pop(size);
     std::vector<dailyReport> finalReport;
+    emptyBoard(pop);
     initializeCornerInfect(pop); //add initialization settings
     int dayspassed = 1;
     //far andare la funzione autonomamente
@@ -459,6 +463,7 @@ auto execute(ParametersCheck check, int size) {
 auto noGraphicsExecute(ParametersCheck check, int size) {
     Population pop(size);
     std::vector<dailyReport> finalReport;
+    emptyBoard(pop);
     initializeInfect(pop); //add initialization settings
     int dayspassed = 1;
     //far andare la funzione autonomamente
@@ -486,6 +491,7 @@ auto noGraphicsExecute(ParametersCheck check, int size) {
 auto bigSimulationExecute(ParametersCheck check, int size) {
     Population pop(size);
     std::vector<dailyReport> finalReport;
+    emptyBoard(pop);
     initializeInfect(pop);
     while (pop.infectsCounter() != 0) {
         pop = nonLinearSpread(pop);
@@ -577,4 +583,3 @@ Considerazioni:
 PROBLEMA DELLE INIZIALIZZAZIONI le board partono sempre con troppi malati anche facendo dei loop di azzeramento malati prima
 
 */
-//nota per capo ->  è il main 1
