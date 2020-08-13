@@ -170,10 +170,10 @@ void gridPrint(Population& pop) { //sistemare gli output
                 std::cout << std::setw(1) << "\033[36mX\033[0m"
                     << "  ";
                 break;
-			case (Condition :: D):
-				std::cout << std::setw(1) << "\033[34mD\033[0m"
-				    << "  ";
-					break;
+	    case (Condition :: D):
+		std::cout << std::setw(1) << "\033[34mD\033[0m"
+		    << "  ";
+		break;
 
             default:
                 std::cout << "no cell selected" << '\n';
@@ -242,8 +242,8 @@ auto linearSpread(Population& previous) { //includere uno spread in cui i valori
                 evolved(row, column) = previous(row, column);
                 break;
             }
-			case Condition::D: {
-			evolved(row, column) = previous(row, column);
+	    case Condition::D: {
+		evolved(row, column) = previous(row, column);
                 break;
             }
 				
