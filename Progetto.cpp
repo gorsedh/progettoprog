@@ -1,3 +1,6 @@
+//PROBLEMA LE BOARD INIZIANO CON TROPPI MALATI
+//es usando opzione a del main  (ora su un malato solo) ci sono almeno 20 malati ogni volta
+
 #include <iostream>
 #include <vector>
 #include <chrono>
@@ -169,7 +172,6 @@ auto dataCollecting(Population& pop, std::vector<dailyReport>& finalReport) {
 
 }
 
-
 //Type of spreadings
 
 auto linearSpread(Population& previous) { //includere uno spread in cui i valori di gammax e beta variano a seconda del numero di malati?
@@ -192,7 +194,7 @@ auto linearSpread(Population& previous) { //includere uno spread in cui i valori
                     ++i;
                 }
                 if (i == adjacentInfects(previous, row, column) &&
-                    dis(gen) <= (beta * i)) {
+                    dis(gen) <= ( ( (i-8)/7)*(1-beta) +1) ) { //modello di spread lineare fra (1,beta) e (8,1)
                     evolved(row, column) = (Condition::I);
                 }
                 else {
@@ -225,9 +227,9 @@ auto linearSpread(Population& previous) { //includere uno spread in cui i valori
 auto nonLinearSpread(Population& previous) {
     int size = previous.getSize();
     Population evolved(size);
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::normal_distribution<> dis(0, 1);
+    std::random_device seed;
+    std::mt19937 gen(seed());
+    std::uniform_real_distribution<> dis(0, 1);
     int previousDayInfects = previous.infectsCounter();
 
     for (int row = 1; row < size - 1; ++row) {
@@ -251,7 +253,7 @@ auto nonLinearSpread(Population& previous) {
                 break;
             }
             case Condition::I: {
-                if (dis(gen) <= gammax /((size * size - previousDayInfects) / (size * size))) { //rallenta la cura all'aumento dei contagiati
+                if (dis(gen) <= gammax / ((size * size - previousDayInfects) / (size * size))) { //rallenta la cura all'aumento dei contagiati
                     evolved(row, column) = (Condition::R);
                 }
                 else {
@@ -276,6 +278,11 @@ auto nonLinearSpread(Population& previous) {
 
 //types of epidemics
 auto initializeCornerInfect(Population& pop) { //inizializzo un malato in 1,1 (2,2), questa parte verrà rimossa in seguito
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            pop(i, j) = (Condition::S);
+        }
+    }
     pop(1, 1) = (Condition::I);
 }
 
@@ -359,7 +366,7 @@ auto initBeta() {
     }
 }
 
-auto initgammax() {
+auto initGammax() {
     double gammaxval;
     std::cout << "enter value for gamma (0 < x < 1), otherwise it will be set as default\n";
     std::cout << "Suggested values are between 0.05 and 0.2, higher values will result in faster recovering\n";
@@ -376,7 +383,7 @@ auto initializeparameters() { //in case we add more parameters in the future
 
     initSize();
     initBeta();
-    initgammax();
+    initGammax();
 
 }
 
@@ -384,15 +391,15 @@ auto initializeParametersNoGraph() { //in case we add more parameters in the fut
 
     initSizeNoGraph();
     initBeta();
-    initgammax();
+    initGammax();
 
 }
 
 auto autoinitialize() {
     //initializes to standard settings
-    size = 7;
-    beta = 0.7;
-    gammax = 0.4;
+    size = 10;
+    beta = 0.4;
+    gammax = 0.2;
 
 }
 
@@ -426,11 +433,11 @@ auto execute() {
 auto noGraphicsExecute() {
     Population pop(size);
     std::vector<dailyReport> finalReport;
-    initializeCornerInfect(pop); //add initialization settings
+    initializeInfect(pop); //add initialization settings
     int dayspassed = 1;
     //far andare la funzione autonomamente
     while (pop.infectsCounter() != 0) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
         pop = linearSpread(pop);
         std::cout << "Day: " << dayspassed << "\n";
 
@@ -454,9 +461,7 @@ auto bigSimulationExecute() {
     std::vector<dailyReport> finalReport;
     initializeInfect(pop);
     while (pop.infectsCounter() != 0) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         pop = nonLinearSpread(pop);
-
         std::cout << "\n";
         dataCollecting(pop, finalReport);
         if (pop.infectsCounter() == 0) {
@@ -484,26 +489,26 @@ void printDataToFile(std::vector<dailyReport> finalReport) {
 
 int main()
 {
-    std::cout << "Which optionwould you like to use?\n(a for auto settings, d for disabled graphics, b for disabled graphics and output, any other key for manual settings)\n";
-    std::cout << "A and MANUAL are suggested for small populations to get a graphical output of the epidemic (size<30)\n";
-    std::cout << "D is suggested for big populations (size>30)\n";
-    std::cout << "B is suggested for very big populations just to have the report to analyze (size>100)\n";
+    std::cout << "Which optionwould you like to use?\n(\033[31ma\033[0m for auto settings, \033[31md\033[0m for disabled graphics, \033[31mb\033[0m for disabled graphics and output, any other key for manual settings)\n";
+    std::cout << "a and manual are suggested for small populations to get a graphical output of the epidemic (size<30)\n";
+    std::cout << "d is suggested for big populations (size>30)\n";
+    std::cout << "b is suggested for very big populations just to have the report to analyze (size>100)\n";
 
     char askparameters;
     std::vector<dailyReport> finalReport;
     std::cin >> askparameters;
     switch (askparameters) {
-    case 'A':
+    case 'a':
         autoinitialize();
         finalReport = execute();
 
         break;
-    case 'D':
+    case 'd':
         initializeParametersNoGraph();
         finalReport = noGraphicsExecute();
 
         break;
-    case 'B':
+    case 'b':
         initializeParametersNoGraph();
         finalReport = bigSimulationExecute();
 
@@ -527,3 +532,10 @@ int main()
 
 
 }
+
+/*
+Considerazioni:
+
+PROBLEMA DELLE INIZIALIZZAZIONI le board partono sempre con troppi malati anche facendo dei loop di azzeramento malati prima
+
+*/
