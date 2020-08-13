@@ -1,6 +1,3 @@
-//PROBLEMA LE BOARD INIZIANO CON TROPPI MALATI
-//es usando opzione a del main  (ora su un malato solo) ci sono almeno 20 malati ogni volta
-
 #include <iostream>
 #include <vector>
 #include <chrono>
@@ -14,9 +11,9 @@
 //#include <functional>
 
 //global variables
-double beta;
-double gammax; //gammax scelto perchè c'era conflittualità in compilazione da linea di comando
-int size;
+double beta = 0;
+double gammax = 0; //gammax scelto perchè c'era conflittualità in compilazione da linea di comando
+//int size = 1;
 
 //strutture
 enum class Condition : char { //possible states
@@ -70,7 +67,7 @@ public:
             }
             else {}
         }
-        return sus;
+        return (sus - (4 * n_-4)); //ignora i suscettibili sul bordo
     }
 
     int recoveredCounter() const {
@@ -83,6 +80,17 @@ public:
         }
         return rec;
     }
+
+};
+
+struct ParametersCheck {
+
+    double betaCheck_;
+    double gammaCheck_;
+ 
+
+
+    ParametersCheck(double betaCheck, double gammaCheck) : betaCheck_(betaCheck), gammaCheck_(gammaCheck) {}
 
 };
 
@@ -194,7 +202,7 @@ auto linearSpread(Population& previous) { //includere uno spread in cui i valori
                     ++i;
                 }
                 if (i == adjacentInfects(previous, row, column) &&
-                    dis(gen) <= ( ( (i-8)/7)*(1-beta) +1) ) { //modello di spread lineare fra (1,beta) e (8,1)
+                    dis(gen) <= (((i - 8) / 7) * (1 - beta) + 1)) { //modello di spread lineare fra (1,beta) e (8,1)
                     evolved(row, column) = (Condition::I);
                 }
                 else {
@@ -245,7 +253,7 @@ auto nonLinearSpread(Population& previous) {
                     ++i;
                 }
                 if (i == adjacentInfects(previous, row, column) &&
-                    dis(gen) <= (beta * i) / (((size * size + previousDayInfects) / (size * size)) ^2 )) { //riduce infettività all'aumentare degli infetti
+                    dis(gen) <= (beta * i) / (((size * size + previousDayInfects) / (size * size)) ^ 2)) { //riduce infettività all'aumentare degli infetti
                     evolved(row, column) = (Condition::I);
                 }
                 else {
@@ -278,8 +286,8 @@ auto nonLinearSpread(Population& previous) {
 
 //types of epidemics
 auto initializeCornerInfect(Population& pop) { //inizializzo un malato in 1,1 (2,2), questa parte verrà rimossa in seguito
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
+    for (int i = 0; i < pop.getSize(); i++) {
+        for (int j = 0; j < pop.getSize(); j++) {
             pop(i, j) = (Condition::S);
         }
     }
@@ -294,16 +302,16 @@ auto initializeInfect(Population& pop) { //inizializzo un malato in 1,1 (2,2), q
     int i, j;
     switch (option_) {
     case '1':
-        
-        pop(i = (rand() + time(nullptr)) % (size),
-            j = (rand() + time(nullptr)) % (size)) = (Condition::I);
+
+        pop(i = (rand() + time(nullptr)) % (pop.getSize()),
+            j = (rand() + time(nullptr)) % (pop.getSize())) = (Condition::I);
         break;
     case '2':
-        
+
         for (int x = 0; x < 10; ++x) {
             for (int y = 0; y <= 10; ++y) {
-                int i = (rand() + time(nullptr)) % (size / 2);
-                int j = (rand() + time(nullptr)) % (size / 2);
+                int i = (rand() + time(nullptr)) % (pop.getSize() / 2);
+                int j = (rand() + time(nullptr)) % (pop.getSize() / 2);
                 pop(i, j) = (Condition::I);
             } // print in a smaller grid 10 infects
         }
@@ -314,46 +322,47 @@ auto initializeInfect(Population& pop) { //inizializzo un malato in 1,1 (2,2), q
         std::cin >> numOfInfects;
         for (int x = 0; x <= numOfInfects; ++x) {
             for (int y = 0; y <= numOfInfects; ++y) {
-                int i = (rand() + time(nullptr)) % (size);
-                int j = (rand() + time(nullptr)) % (size);
+                int i = (rand() + time(nullptr)) % (pop.getSize());
+                int j = (rand() + time(nullptr)) % (pop.getSize());
                 pop(i, j) = (Condition::I);
             }
         }
         break;
-    default: 
+    default:
         pop(1, 1) = (Condition::I);
         break;
     }
 }
 
 //initialize data
-auto initSize() {
+
+int initSize() {
     int sizeval;
     std::cout << "Please enter a valid number as board size. (3<x<40), otherwise it will be set as default\n";
     std::cin >> sizeval;
     if (sizeval > 3 && sizeval < 40) {
-        size = sizeval;
+        return sizeval;
     }
     else {
-        size = 15;
+        return 15;
     }
-
+    
 }
 
-auto initSizeNoGraph() {
+int initSizeNoGraph() {
     int sizeval;
     std::cout << "Please enter a valid number as board size (x>3, 100 is the suggested size, an higher value will result in a longer epidemics)\n";
     std::cin >> sizeval;
     if (sizeval > 3) {
-        size = sizeval;
+        return sizeval;
     }
     else {
-        size = 100;
+        return 100;
     }
-
+    return sizeval;
 }
 
-auto initBeta() {
+double initBeta() {
     double betaval;
     std::cout << "Enter value for beta (0 < x < 1), otherwise it will be set as default\n";
     std::cout << "Suggested values are between 0.2 and 0.4, higher values will result in faster spreading\n";
@@ -364,9 +373,10 @@ auto initBeta() {
     else {
         beta = 0.3;
     }
+    return betaval;
 }
 
-auto initGammax() {
+double initGammax() {
     double gammaxval;
     std::cout << "enter value for gamma (0 < x < 1), otherwise it will be set as default\n";
     std::cout << "Suggested values are between 0.05 and 0.2, higher values will result in faster recovering\n";
@@ -377,41 +387,56 @@ auto initGammax() {
     else {
         gammax = 0.1;
     }
+    return gammaxval;
 }
 
 auto initializeparameters() { //in case we add more parameters in the future
-
-    initSize();
-    initBeta();
-    initGammax();
-
+    double betaMirror = initBeta();
+    double gammaMirror = initGammax();
+    
+    ParametersCheck checker = ParametersCheck(betaMirror, gammaMirror);
+    return checker;
 }
 
 auto initializeParametersNoGraph() { //in case we add more parameters in the future
 
-    initSizeNoGraph();
-    initBeta();
-    initGammax();
+    double betaMirror = initBeta();
+    double gammaMirror = initGammax();
+    
+    ParametersCheck checker = ParametersCheck(betaMirror, gammaMirror);
+    return checker;
 
 }
 
 auto autoinitialize() {
-    //initializes to standard settings
-    size = 10;
-    beta = 0.4;
-    gammax = 0.2;
+    
+    double autobeta = 0.4;
+    double autogammax = 0.2;
+    
 
+    beta = autobeta;
+    gammax = autogammax;
+    
+
+    ParametersCheck check = ParametersCheck(autobeta, autogammax);
+    return check;
+}
+
+auto checkParameters(ParametersCheck check) {
+    if (beta != check.betaCheck_) { beta = check.betaCheck_; }
+    if (gammax != check.gammaCheck_) { gammax = check.gammaCheck_; }
+    
 }
 
 //executions
-auto execute() {
+auto execute(ParametersCheck check, int size) {
     Population pop(size);
     std::vector<dailyReport> finalReport;
     initializeCornerInfect(pop); //add initialization settings
     int dayspassed = 1;
     //far andare la funzione autonomamente
     while (pop.infectsCounter() != 0) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(800));
+        std::this_thread::sleep_for(std::chrono::milliseconds(600));
         pop = linearSpread(pop);
         std::cout << "Day: " << dayspassed << "\n";
         gridPrint(pop);
@@ -419,6 +444,7 @@ auto execute() {
         dataCollecting(pop, finalReport);
         std::cout << "\n";
         dayspassed++;
+        checkParameters(check);
         if (pop.infectsCounter() == 0) {
             return finalReport;
             break;
@@ -430,7 +456,7 @@ auto execute() {
 
 }
 
-auto noGraphicsExecute() {
+auto noGraphicsExecute(ParametersCheck check, int size) {
     Population pop(size);
     std::vector<dailyReport> finalReport;
     initializeInfect(pop); //add initialization settings
@@ -445,6 +471,7 @@ auto noGraphicsExecute() {
         dataCollecting(pop, finalReport);
         std::cout << "\n";
         dayspassed++;
+        checkParameters(check);
         if (pop.infectsCounter() == 0) {
             return finalReport;
             break;
@@ -456,7 +483,7 @@ auto noGraphicsExecute() {
 
 }
 
-auto bigSimulationExecute() {
+auto bigSimulationExecute(ParametersCheck check, int size) {
     Population pop(size);
     std::vector<dailyReport> finalReport;
     initializeInfect(pop);
@@ -464,6 +491,7 @@ auto bigSimulationExecute() {
         pop = nonLinearSpread(pop);
         std::cout << "\n";
         dataCollecting(pop, finalReport);
+        checkParameters(check);
         if (pop.infectsCounter() == 0) {
             return finalReport;
             break;
@@ -475,10 +503,12 @@ auto bigSimulationExecute() {
 }
 
 //
-void printDataToFile(std::vector<dailyReport> finalReport) {
+void printDataToFile(std::vector<dailyReport>& finalReport) {
+    int const calculated_size = (sqrt(finalReport[0].daily_S_ + finalReport[0].daily_I_ + finalReport[0].daily_R_) + 2);
     std::ofstream report;
     report.open("report.txt");
-    report << "//Size is " << size << ", Beta is " << beta << ", Gamma is " << gammax << "\n";
+    report << 
+        "//Size is " << calculated_size <<", beta is " << beta << ", Gamma is " << gammax << "\n";
     for (int i = 0; i < finalReport.size(); i++) {
         report << i + 1 << std::setw(10) << finalReport[i].daily_S_ << std::setw(10) << finalReport[i].daily_I_ << std::setw(10) << finalReport[i].daily_R_ << "\n";
     }
@@ -499,31 +529,39 @@ int main()
     std::cin >> askparameters;
     switch (askparameters) {
     case 'a':
-        autoinitialize();
-        finalReport = execute();
-
-        break;
+    {
+        int const boardSize = initSize();
+        ParametersCheck const checkParAuto = autoinitialize();
+        finalReport = execute(checkParAuto, boardSize);
+    }
+    break;
     case 'd':
-        initializeParametersNoGraph();
-        finalReport = noGraphicsExecute();
-
-        break;
+    {
+        int const boardSize = initSizeNoGraph();
+        ParametersCheck const checkParNoGraph = initializeParametersNoGraph();
+        finalReport = noGraphicsExecute(checkParNoGraph, boardSize);
+    }
+    break;
     case 'b':
-        initializeParametersNoGraph();
-        finalReport = bigSimulationExecute();
-
-        break;
+    {
+        int const boardSize = initSizeNoGraph();
+        ParametersCheck const checkParNoOutput = initializeParametersNoGraph();
+        finalReport = bigSimulationExecute(checkParNoOutput, boardSize);
+    }
+    break;
 
     default:
-        initializeparameters();
-        finalReport = execute();
-
+    {
+        int const boardSize = initSize();
+        ParametersCheck const checkDefault = initializeparameters();
+        finalReport = execute(checkDefault, boardSize);
+    }
     }
     std::cout << "Would you like to get the report for the epidemic?(y/n),\nNon valid input will be considered as an affirmative answer\n";
     char printReport;
     std::cin >> printReport;
     if (printReport == 'n') {
-        std::cout << "See you in the next simulation!";
+        std::cout << "See you in the next simulation!\n\n";
     }
     else {
         printDataToFile(finalReport);
@@ -539,3 +577,4 @@ Considerazioni:
 PROBLEMA DELLE INIZIALIZZAZIONI le board partono sempre con troppi malati anche facendo dei loop di azzeramento malati prima
 
 */
+//nota per capo ->  è il main 1
