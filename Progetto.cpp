@@ -263,7 +263,7 @@ auto nonLinearSpread(Population& previous) {
                 break;
             }
             case Condition::I: {
-                if (dis(gen) <= gammax /*/ ((size * size - previousDayInfects) / (size * size))*/) { //rallenta la cura all'aumento dei contagiati
+                if (dis(gen) <= gammax /((size * size - previousDayInfects) / (size * size))) { //rallenta la cura all'aumento dei contagiati
                     evolved(row, column) = (Condition::R);
                 }
                 else {
