@@ -1,5 +1,5 @@
 /*
-Questa macro permette di graficare i dati raccolti dal programma 
+Questa macro permette di graficare tramite software root i dati raccolti dal programma 
 elaborando il file report.txt
 Assicurarsi che il file sia nella stessa directory di questa macro
 
