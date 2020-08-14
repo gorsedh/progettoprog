@@ -406,6 +406,7 @@ double initBeta() {
     }
     else {
         beta = 0.3;
+	betaval = beta;
     }
     return betaval;
 }
@@ -420,6 +421,7 @@ double initGammax() {
     }
     else {
         gammax = 0.1;
+	gammaxval = gammax;
     }
     return gammaxval;
 }
@@ -564,6 +566,7 @@ int main()
     char askparameters;
     std::vector<dailyReport> finalReport;
     std::cin >> askparameters;
+    std::cout << "\n";
     switch (askparameters) {
     case 'a':
     {
