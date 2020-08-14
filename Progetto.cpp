@@ -543,7 +543,7 @@ auto bigSimulationExecute(ParametersCheck check, int size) {
 
 //
 void printDataToFile(std::vector<dailyReport>& finalReport) {
-    int const calculated_size = (sqrt(finalReport[0].daily_S_ + finalReport[0].daily_I_ + finalReport[0].daily_R_) + 2);
+    int const calculated_size = (sqrt(finalReport[0].daily_S_ + finalReport[0].daily_I_ + finalReport[0].daily_R_ + finalReport[0].daily_D_ ) + 2);
     std::ofstream report;
     report.open("report.txt");
     report << 
