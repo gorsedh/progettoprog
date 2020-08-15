@@ -68,7 +68,7 @@ public:
             }
             else {}
         }
-        return (sus - (4 * n_-4)); //ignora i suscettibili sul bordo
+        return (sus - (4 * n_ - 4)); //ignora i suscettibili sul bordo
     }
 
     int recoveredCounter() const {
@@ -81,24 +81,24 @@ public:
         }
         return rec;
     }
-    
+
     int deadCounter() {
-		int dead = 0;
-		for (int i = 0; i < n_ * n_; i++) {
+        int dead = 0;
+        for (int i = 0; i < n_ * n_; i++) {
             if (board_[i] == Condition::D) {
                 dead++;
             }
             else {}
         }
-        return dead; 
-	}
+        return dead;
+    }
 };
 
 struct ParametersCheck {
 
     double betaCheck_;
     double gammaCheck_;
- 
+
 
 
     ParametersCheck(double betaCheck, double gammaCheck) : betaCheck_(betaCheck), gammaCheck_(gammaCheck) {}
@@ -170,10 +170,10 @@ void gridPrint(Population& pop) { //sistemare gli output
                 std::cout << std::setw(1) << "\033[36mX\033[0m"
                     << "  ";
                 break;
-	    case (Condition :: D):
-		std::cout << std::setw(1) << "\033[34mD\033[0m"
-		    << "  ";
-		break;
+            case (Condition::D):
+                std::cout << std::setw(1) << "\033[34mD\033[0m"
+                    << "  ";
+                break;
 
             default:
                 std::cout << "no cell selected" << '\n';
@@ -213,13 +213,13 @@ auto linearSpread(Population& previous) { //includere uno spread in cui i valori
             switch (cell) {
             case Condition::S: {
                 int i = 0;
-                
+
                 while (i != adjacentInfects(previous, row, column)) {
                     ++i;
-                    
+
                 }
                 if (i == adjacentInfects(previous, row, column) &&
-                    dis(gen) <= i* beta ) { //modello di spread lineare fra (0,0) e (1,beta) 
+                    dis(gen) <= i * beta) { //modello di spread lineare fra (0,0) e (1,beta) 
                     evolved(row, column) = (Condition::I);
                 }
                 else {
@@ -228,12 +228,14 @@ auto linearSpread(Population& previous) { //includere uno spread in cui i valori
             }
             case Condition::I: {
                 if (dis(gen) <= gammax) {
-					if (dis(gen) <= std::pow(gammax, 2)) {
-					evolved(row, column) = (Condition::D);
-					} else {
-                    evolved(row, column) = (Condition::R);
+                    if (dis(gen) <= std::pow(gammax, 2)) {
+                        evolved(row, column) = (Condition::D);
+                    }
+                    else {
+                        evolved(row, column) = (Condition::R);
+                    }
                 }
-				} else {
+                else {
                     evolved(row, column) = previous(row, column);
                 }
                 break;
@@ -242,11 +244,11 @@ auto linearSpread(Population& previous) { //includere uno spread in cui i valori
                 evolved(row, column) = previous(row, column);
                 break;
             }
-	    case Condition::D: {
-		evolved(row, column) = previous(row, column);
+            case Condition::D: {
+                evolved(row, column) = previous(row, column);
                 break;
             }
-				
+
             default:
                 break;
             }
@@ -257,13 +259,17 @@ auto linearSpread(Population& previous) { //includere uno spread in cui i valori
 
 //spread non lineare, maggiore il numero di malati più lenta la guarigione e più lento il contagio
 //i suscettibili si ammalano più lentamente, i malati guariscono più lentamente
-auto nonLinearSpread(Population& previous) {
+auto nonLinearSpread(Population& previous, int daysPassed) {
     int size = previous.getSize();
     Population evolved(size);
     std::random_device seed;
     std::mt19937 gen(seed());
     std::uniform_real_distribution<> dis(0, 1);
     int previousDayInfects = previous.infectsCounter();
+
+    if (daysPassed % 7 == 0) { beta = beta* 1.5; } //questa riga simula la movida del sabato
+    if (daysPassed > 60 && daysPassed < 100) { gammax = gammax * 1.5; } //dopo 60 giorni dallo scoppio dell'epidemia le tecniche di cura diventano più efficaci
+    if (daysPassed > 101) { gammax = gammax * 2; } //dopo 100 giorni dallo scoppio dell'epidemia le tecniche di cura diventano ancora più efficaci
 
     for (int row = 1; row < size - 1; ++row) {
         for (int column = 1; column < size - 1; ++column) {
@@ -278,7 +284,7 @@ auto nonLinearSpread(Population& previous) {
                     ++i;
                 }
                 if (i == adjacentInfects(previous, row, column) &&
-                    dis(gen) <= ((beta * i)/ (((size * size + previousDayInfects) / (size * size)) ^ 2))) { //riduce infettività all'aumentare degli infetti
+                    dis(gen) <= ((beta * i) / (((size * size + previousDayInfects) / (size * size))))) { //riduce infettività all'aumentare degli infetti
                     evolved(row, column) = (Condition::I);
                 }
                 else {
@@ -286,10 +292,14 @@ auto nonLinearSpread(Population& previous) {
                 break;
             }
             case Condition::I: {
-                if (dis(gen) <= gammax /((size * size - previousDayInfects) / (size * size)) && dis(gen) > std::pow(gammax, 2)) { //rallenta la cura all'aumento dei contagiati
-                    evolved(row, column) = (Condition::R);
-                } else if(dis(gen) <= gammax /((size * size - previousDayInfects) / (size * size)) && dis(gen) < std::pow(gammax, 2)) {
-					evolved(row, column) = (Condition::D); }
+                if (dis(gen) <= gammax) {
+                    if (dis(gen) <= std::pow(gammax, 2)) {
+                        evolved(row, column) = (Condition::D);
+                    }
+                    else {
+                        evolved(row, column) = (Condition::R);
+                    }
+                }
                 else {
                     evolved(row, column) = previous(row, column);
                 }
@@ -303,7 +313,7 @@ auto nonLinearSpread(Population& previous) {
                 evolved(row, column) = previous(row, column);
                 break;
             }
-            
+
             default:
                 break;
             }
@@ -319,7 +329,7 @@ auto emptyBoard(Population& pop) {
             pop(i, j) = (Condition::S);
         }
     }
-    
+
 }
 
 //types of epidemics
@@ -327,9 +337,9 @@ auto initializeCornerInfect(Population& pop) { //inizializzo un malato in 1,1 (2
     pop(1, 1) = (Condition::I);
 }
 
-auto initializeInfect(Population& pop) { 
-    char option_; 
-    std::cout << "Choose how many infects you want in the population (type the number of the option): \n1) 1 Random infect on the board\n" <<
+auto initializeInfect(Population& pop) {
+    char option_;
+    std::cout << "\nChoose how many infects you want in the population (type the number of the option): \n1) 1 Random infect on the board\n" <<
         "2) 10 random infects in a smaller portion of the grid \n3) manual number of random infects\nAny other key for 1 infect in a corner\n";
     std::cin >> option_;
     int i, j;
@@ -342,24 +352,24 @@ auto initializeInfect(Population& pop) {
     case '2':
 
         for (int x = 0; x < 10; x++) {
-           
-                int oddSize;
-                if (pop.getSize() % 2 == 0) { oddSize = pop.getSize(); }
-                else { oddSize = pop.getSize() - 1; }
-                int i = (rand() + time(nullptr)) % (oddSize / 2);
-                int j = (rand() + time(nullptr)) % (oddSize / 2);
-                pop(i, j) = (Condition::I);
-             // print in a smaller grid 10 infects
+
+            int oddSize;
+            if (pop.getSize() % 2 == 0) { oddSize = pop.getSize(); }
+            else { oddSize = pop.getSize() - 1; }
+            int i = (rand() + time(nullptr)) % (oddSize / 2);
+            int j = (rand() + time(nullptr)) % (oddSize / 2);
+            pop(i, j) = (Condition::I);
+            // print in a smaller grid 10 infects
         }
         break;
     case '3':
         int numOfInfects;
         std::cout << "Instert number of infects\n";
         std::cin >> numOfInfects;
-        for (int x = 0; x <= numOfInfects; x++) {   
-                int i = (rand() + time(nullptr)) % (pop.getSize());
-                int j = (rand() + time(nullptr)) % (pop.getSize());
-                pop(i, j) = (Condition::I);   
+        for (int x = 0; x <= numOfInfects; x++) {
+            int i = (rand() + time(nullptr)) % (pop.getSize());
+            int j = (rand() + time(nullptr)) % (pop.getSize());
+            pop(i, j) = (Condition::I);
         }
         break;
     default:
@@ -372,7 +382,7 @@ auto initializeInfect(Population& pop) {
 
 int initSize() {
     int sizeval;
-    std::cout << "Please enter a valid number as board size. (3<x<40), otherwise it will be set as default\n";
+    std::cout << "\nPlease enter a valid number as \033[31mboard size\033[0m. (3<x<40), otherwise it will be set as default\n";
     std::cin >> sizeval;
     if (sizeval > 3 && sizeval < 40) {
         return sizeval;
@@ -380,12 +390,12 @@ int initSize() {
     else {
         return 15;
     }
-    
+
 }
 
 int initSizeNoGraph() {
     int sizeval;
-    std::cout << "Please enter a valid number as board size (x>3, 100 is the suggested size, an higher value will result in a longer epidemics)\n";
+    std::cout << "\nPlease enter a valid number as \033[31mboard size\033[0m (x>3, 100 is the suggested size, an higher value will result in a longer epidemics)\n";
     std::cin >> sizeval;
     if (sizeval > 3) {
         return sizeval;
@@ -398,7 +408,7 @@ int initSizeNoGraph() {
 
 double initBeta() {
     double betaval;
-    std::cout << "Enter value for beta (0 < x < 1), otherwise it will be set as default\n";
+    std::cout << "\nEnter value for \033[31mbeta\033[0m (0 < x < 1), otherwise it will be set as default\n";
     std::cout << "Suggested values are between 0.2 and 0.4, higher values will result in faster spreading\n";
     std::cin >> betaval;
     if (betaval > 0 && betaval < 1) {
@@ -406,14 +416,14 @@ double initBeta() {
     }
     else {
         beta = 0.3;
-	betaval = beta;
+        betaval = beta;
     }
     return betaval;
 }
 
 double initGammax() {
     double gammaxval;
-    std::cout << "enter value for gamma (0 < x < 1), otherwise it will be set as default\n";
+    std::cout << "\nEnter value for \033[31mgamma\033[0m (0 < x < 1), otherwise it will be set as default\n";
     std::cout << "Suggested values are between 0.05 and 0.2, higher values will result in faster recovering\n";
     std::cin >> gammaxval;
     if (gammaxval > 0 && gammaxval < 1) {
@@ -421,7 +431,7 @@ double initGammax() {
     }
     else {
         gammax = 0.1;
-	gammaxval = gammax;
+        gammaxval = gammax;
     }
     return gammaxval;
 }
@@ -429,7 +439,7 @@ double initGammax() {
 auto initializeparameters() { //in case we add more parameters in the future
     double betaMirror = initBeta();
     double gammaMirror = initGammax();
-    
+
     ParametersCheck checker = ParametersCheck(betaMirror, gammaMirror);
     return checker;
 }
@@ -438,21 +448,21 @@ auto initializeParametersNoGraph() { //in case we add more parameters in the fut
 
     double betaMirror = initBeta();
     double gammaMirror = initGammax();
-    
+
     ParametersCheck checker = ParametersCheck(betaMirror, gammaMirror);
     return checker;
 
 }
 
 auto autoinitialize() {
-    
+
     double autobeta = 0.4;
     double autogammax = 0.2;
-    
+
 
     beta = autobeta;
     gammax = autogammax;
-    
+
 
     ParametersCheck check = ParametersCheck(autobeta, autogammax);
     return check;
@@ -461,7 +471,7 @@ auto autoinitialize() {
 auto checkParameters(ParametersCheck check) {
     if (beta != check.betaCheck_) { beta = check.betaCheck_; }
     if (gammax != check.gammaCheck_) { gammax = check.gammaCheck_; }
-    
+
 }
 
 //executions
@@ -526,10 +536,12 @@ auto bigSimulationExecute(ParametersCheck check, int size) {
     std::vector<dailyReport> finalReport;
     emptyBoard(pop);
     initializeInfect(pop);
+    int daysPassed = 1;
     while (pop.infectsCounter() != 0) {
-        pop = nonLinearSpread(pop);
+        pop = nonLinearSpread(pop, daysPassed);
         std::cout << "\n";
         dataCollecting(pop, finalReport);
+        daysPassed++;
         checkParameters(check);
         if (pop.infectsCounter() == 0) {
             return finalReport;
@@ -543,11 +555,11 @@ auto bigSimulationExecute(ParametersCheck check, int size) {
 
 //
 void printDataToFile(std::vector<dailyReport>& finalReport) {
-    int const calculated_size = (sqrt(finalReport[0].daily_S_ + finalReport[0].daily_I_ + finalReport[0].daily_R_ + finalReport[0].daily_D_ ) + 2);
+    int const calculated_size = (sqrt(finalReport[0].daily_S_ + finalReport[0].daily_I_ + finalReport[0].daily_R_ + finalReport[0].daily_D_) + 2);
     std::ofstream report;
     report.open("report.txt");
-    report << 
-        "//Size is " << calculated_size <<", beta is " << beta << ", Gamma is " << gammax <<  "\n";
+    report <<
+        "//Size is " << calculated_size << ", beta is " << beta << ", Gamma is " << gammax << "\n";
     for (int i = 0; i < finalReport.size(); i++) {
         report << i + 1 << std::setw(10) << finalReport[i].daily_S_ << std::setw(10) << finalReport[i].daily_I_ << std::setw(10) << finalReport[i].daily_R_ << std::setw(10) << finalReport[i].daily_D_ << "\n";
     }
@@ -566,7 +578,6 @@ int main()
     char askparameters;
     std::vector<dailyReport> finalReport;
     std::cin >> askparameters;
-    std::cout << "\n";
     switch (askparameters) {
     case 'a':
     {
@@ -610,13 +621,3 @@ int main()
 
 
 }
-
-// bisogna aggiungere nel report il dato del tasso di mortalità della simulazione 
-
-//la funzione clearBoard è virtualmente inutile, è stata utile in fase di debugging per trovare errori nel codice
-/*
-Considerazioni:
-
-PROBLEMA DELLE INIZIALIZZAZIONI le board partono sempre con troppi malati anche facendo dei loop di azzeramento malati prima
-
-*/
