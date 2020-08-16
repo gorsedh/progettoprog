@@ -12,7 +12,7 @@
 
 //global variables
 double beta = 0;
-double gammax = 0; //gammax scelto perchè c'era conflittualità in compilazione da linea di comando
+double gamma_ = 0; //gamma_ scelto perchè c'era conflittualità in compilazione da linea di comando
 
 
 //strutture
@@ -197,7 +197,7 @@ auto dataCollecting(Population& pop, std::vector<dailyReport>& finalReport) {
 
 //Type of spreadings
 
-auto linearSpread(Population& previous) { //includere uno spread in cui i valori di gammax e beta variano a seconda del numero di malati?
+auto linearSpread(Population& previous) { //includere uno spread in cui i valori di gamma_ e beta variano a seconda del numero di malati?
     int size = previous.getSize();
     Population evolved(size);
     std::random_device seed;
@@ -227,8 +227,8 @@ auto linearSpread(Population& previous) { //includere uno spread in cui i valori
                 break;
             }
             case Condition::I: {
-                if (dis(gen) <= gammax) {
-                    if (dis(gen) <= std::pow(gammax, 2)) {
+                if (dis(gen) <= gamma_) {
+                    if (dis(gen) <= std::pow(gamma_, 2)) {
                         evolved(row, column) = (Condition::D);
                     }
                     else {
@@ -267,9 +267,9 @@ auto nonLinearSpread(Population& previous, int daysPassed) {
     std::uniform_real_distribution<> dis(0, 1);
     int previousDayInfects = previous.infectsCounter();
 
-    if (daysPassed % 7 == 0) { beta = beta* 1.5; } //questa riga simula la movida del sabato
-    if (daysPassed > 60 && daysPassed < 100) { gammax = gammax * 1.5; } //dopo 60 giorni dallo scoppio dell'epidemia le tecniche di cura diventano più efficaci
-    if (daysPassed > 101) { gammax = gammax * 2; } //dopo 100 giorni dallo scoppio dell'epidemia le tecniche di cura diventano ancora più efficaci
+    if (daysPassed % 7 == 0) { beta = beta * 1.5; } //questa riga simula la movida del sabato
+    if (daysPassed > 60 && daysPassed < 100) { gamma_ = gamma_ * 1.5; } //dopo 60 giorni dallo scoppio dell'epidemia le tecniche di cura diventano più efficaci
+    if (daysPassed > 101) { gamma_ = gamma_ * 2; } //dopo 100 giorni dallo scoppio dell'epidemia le tecniche di cura diventano ancora più efficaci
 
     for (int row = 1; row < size - 1; ++row) {
         for (int column = 1; column < size - 1; ++column) {
@@ -292,8 +292,8 @@ auto nonLinearSpread(Population& previous, int daysPassed) {
                 break;
             }
             case Condition::I: {
-                if (dis(gen) <= gammax) {
-                    if (dis(gen) <= std::pow(gammax, 2)) {
+                if (dis(gen) <= gamma_) {
+                    if (dis(gen) <= std::pow(gamma_, 2)) {
                         evolved(row, column) = (Condition::D);
                     }
                     else {
@@ -421,24 +421,24 @@ double initBeta() {
     return betaval;
 }
 
-double initGammax() {
-    double gammaxval;
+double initgamma_() {
+    double gamma_val;
     std::cout << "\nEnter value for \033[31mgamma\033[0m (0 < x < 1), otherwise it will be set as default\n";
     std::cout << "Suggested values are between 0.05 and 0.2, higher values will result in faster recovering\n";
-    std::cin >> gammaxval;
-    if (gammaxval > 0 && gammaxval < 1) {
-        gammax = gammaxval;
+    std::cin >> gamma_val;
+    if (gamma_val > 0 && gamma_val < 1) {
+        gamma_ = gamma_val;
     }
     else {
-        gammax = 0.1;
-        gammaxval = gammax;
+        gamma_ = 0.1;
+        gamma_val = gamma_;
     }
-    return gammaxval;
+    return gamma_val;
 }
 
 auto initializeparameters() { //in case we add more parameters in the future
     double betaMirror = initBeta();
-    double gammaMirror = initGammax();
+    double gammaMirror = initgamma_();
 
     ParametersCheck checker = ParametersCheck(betaMirror, gammaMirror);
     return checker;
@@ -447,7 +447,7 @@ auto initializeparameters() { //in case we add more parameters in the future
 auto initializeParametersNoGraph() { //in case we add more parameters in the future
 
     double betaMirror = initBeta();
-    double gammaMirror = initGammax();
+    double gammaMirror = initgamma_();
 
     ParametersCheck checker = ParametersCheck(betaMirror, gammaMirror);
     return checker;
@@ -457,20 +457,20 @@ auto initializeParametersNoGraph() { //in case we add more parameters in the fut
 auto autoinitialize() {
 
     double autobeta = 0.4;
-    double autogammax = 0.2;
+    double autogamma_ = 0.2;
 
 
     beta = autobeta;
-    gammax = autogammax;
+    gamma_ = autogamma_;
 
 
-    ParametersCheck check = ParametersCheck(autobeta, autogammax);
+    ParametersCheck check = ParametersCheck(autobeta, autogamma_);
     return check;
 }
 
 auto checkParameters(ParametersCheck check) {
     if (beta != check.betaCheck_) { beta = check.betaCheck_; }
-    if (gammax != check.gammaCheck_) { gammax = check.gammaCheck_; }
+    if (gamma_ != check.gammaCheck_) { gamma_ = check.gammaCheck_; }
 
 }
 
@@ -536,6 +536,26 @@ auto bigSimulationExecute(ParametersCheck check, int size) {
     std::vector<dailyReport> finalReport;
     emptyBoard(pop);
     initializeInfect(pop);
+    while (pop.infectsCounter() != 0) {
+        pop = linearSpread(pop);
+        std::cout << "\n";
+        dataCollecting(pop, finalReport);
+        checkParameters(check);
+        if (pop.infectsCounter() == 0) {
+            return finalReport;
+            break;
+        }
+        else {}
+
+    }
+
+}
+
+auto bigSimulationExecuteNL(ParametersCheck check, int size) {
+    Population pop(size);
+    std::vector<dailyReport> finalReport;
+    emptyBoard(pop);
+    initializeInfect(pop);
     int daysPassed = 1;
     while (pop.infectsCounter() != 0) {
         pop = nonLinearSpread(pop, daysPassed);
@@ -559,7 +579,7 @@ void printDataToFile(std::vector<dailyReport>& finalReport) {
     std::ofstream report;
     report.open("report.txt");
     report <<
-        "//Size is " << calculated_size << ", beta is " << beta << ", Gamma is " << gammax << "\n";
+        "//Size is " << calculated_size << ", beta is " << beta << ", Gamma is " << gamma_ << "\n";
     for (int i = 0; i < finalReport.size(); i++) {
         report << i + 1 << std::setw(10) << finalReport[i].daily_S_ << std::setw(10) << finalReport[i].daily_I_ << std::setw(10) << finalReport[i].daily_R_ << std::setw(10) << finalReport[i].daily_D_ << "\n";
     }
@@ -570,10 +590,11 @@ void printDataToFile(std::vector<dailyReport>& finalReport) {
 
 int main()
 {
-    std::cout << "Which optionwould you like to use?\n(\033[31ma\033[0m for auto settings, \033[31md\033[0m for disabled graphics, \033[31mb\033[0m for disabled graphics and output, any other key for manual settings)\n";
+    std::cout << "Which optionwould you like to use?\n(\033[31ma\033[0m for auto settings, \033[31md\033[0m for disabled graphics, \033[31mb\033[0m for disabled graphics and output,\n\033[31mn\033[0m for a non linear spread and no graphic output, \033[31many other key\033[0m for manual settings)\n";
     std::cout << "a and manual are suggested for small populations to get a graphical output of the epidemic (size<30)\n";
     std::cout << "d is suggested for big populations (size>30)\n";
     std::cout << "b is suggested for very big populations just to have the report to analyze (size>100)\n";
+    std::cout << "n is suggested for a non linear spread of a disease over a big population, just for the report to analyze (size>100)\n";
 
     char askparameters;
     std::vector<dailyReport> finalReport;
@@ -598,6 +619,13 @@ int main()
         int const boardSize = initSizeNoGraph();
         ParametersCheck const checkParNoOutput = initializeParametersNoGraph();
         finalReport = bigSimulationExecute(checkParNoOutput, boardSize);
+    }
+    break;
+    case 'n':
+    {
+        int const boardSize = initSizeNoGraph();
+        ParametersCheck const checkParNoOutput = initializeParametersNoGraph();
+        finalReport = bigSimulationExecuteNL(checkParNoOutput, boardSize);
     }
     break;
 
