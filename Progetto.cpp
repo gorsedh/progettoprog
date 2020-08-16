@@ -138,6 +138,11 @@ int adjacentInfects(Population& pop, int row, int column) {
     }
 }
 
+int booleanMarker(int x) {
+    if (x == 0) { return 0; }
+    else { return 1; }
+}
+
 //print the grid
 void gridPrint(Population& pop) { //sistemare gli output
     std::cout << "   ";
@@ -220,6 +225,9 @@ auto linearSpread(Population& previous) { //includere uno spread in cui i valori
                 }
                 if (i == adjacentInfects(previous, row, column) &&
                     dis(gen) <= i * beta) { //modello di spread lineare fra (0,0) e (1,beta) 
+                    
+                    //dis(gen) <= booleanMarker(i) * ( (i-1)*(1-beta)/7 + beta) ) { //linear spread fra (1,beta) e (8,1) con annullamento sullo zero
+                    
                     evolved(row, column) = (Condition::I);
                 }
                 else {
