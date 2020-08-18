@@ -29,36 +29,40 @@ bool operator==(State const& lhs, State const& rhs) {
 class Epidemic{
      
      private:
-         State s0;
+         State s0();
          int n;
      public:
         std::vector<State> report;
          int const& pop = n;
          Epidemic(State const& s0, int s) : report{s0}, n{s} {};
-         void evolve(double b, double g, double n) {  // ic means initial Conditions
+         void evolve(double b, double g, double n_) {  // ic means initial Conditions
             
-            State next;
-            auto iC = s0;
 			 
-             for(int i = 0; i < 100; ++i) {
+			State next;
+			 
+             for(int i = 0; i < 10; ++i) {
+				// assert( next.s >= 0 && next.r >= 0 && next.i >= 0);
 
-             next.s = iC.s - b * iC.s * iC.i;
+             
 			 if (next.s < 0) {
-				 next.s == 0; }
-			next.i = iC.i + b * iC.i * iC.s - g * iC.i;
+				 next.s == 0; } else {
+					 next.s = report[i].s - b * report[i].s * report[i].i; }
+			
 			if (next.i < 0) {
-				 next.i == 0; }
-             next.r = iC.r + g * iC.i;
+				 next.i == 0; } else {
+				 next.i = report[i].i + b * report[i].i * report[i].s - g * report[i].i; }
+             
 			 if (next.r < 0) {
-				 next.r == 0; }
+				 next.r == 0; } else {
+					 next.r = report[i].r + g * report[i].i; }
              report.push_back(next);
-             iC = next;
+             //iC = next;
              }
          }
     };     
     
 void printData(std::vector<State> report) {
-	int daysPassed = 0;
+         int daysPassed = 0;
          for(auto it = report.begin(), end = report.end(); it != end; ++it) {
              std::cout << "Giorno "<< daysPassed <<"\n Susceptibles: " << (*it).s << "\n Infectious: " << (*it).i << "\n Recovered: " << (*it).r <<'\n';
 		 ++daysPassed;
@@ -69,14 +73,17 @@ int main() {
    double beta_;
    double gamma_;
    double population_;
-   std::cout << "Welcome to... \n, Please enter a value for beta (0 < x < 1, suggested values are between 0.3 and 0.6) the mean contagion rate: " << '\n';
+   std::cout << "Welcome to the "Option 1 epidemic simulation", \n Please enter a value for beta (0 < x < 1, suggested values are between 0.001 and 0.01) the mean contagion rate: " << '\n';
    std::cin >> beta_;
-   std::cout << "Enter a value for gamma (0 < x < 1, suggested values are between 0.03 and 0.2) the mean recovery rate: " << '\n';
+   std::cout << "Enter a value for gamma (0 < x < 1, suggested values are between 0.001 and 0.005) the mean recovery rate: " << '\n';
    std::cin >> gamma_;
-   std::cout << "Enter a value for the population ( x >0, suggested values are between 50 and 200): " << '\n';
+   std::cout << "Enter a value for the population ( x > 0, suggested value is 100): " << '\n';
    std::cin >> population_;
    
+   double sus =  population_ - 1;
    State s0{};
+   s0.s = sus;
+   s0.i = 1;
    Epidemic covid(s0, population_);
    covid.evolve(beta_, gamma_, population_ );
    printData(covid.report);
