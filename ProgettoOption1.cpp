@@ -58,8 +58,10 @@ class Epidemic{
     };     
     
 void printData(std::vector<State> report) {
+	int daysPassed = 0;
          for(auto it = report.begin(), end = report.end(); it != end; ++it) {
-             std::cout << "Susceptibles: " << (*it).s << "\n Infectious: " << (*it).i << "\n Recovered: " << (*it).r <<'\n';
+             std::cout << "Giorno "<< daysPassed <<"\n Susceptibles: " << (*it).s << "\n Infectious: " << (*it).i << "\n Recovered: " << (*it).r <<'\n';
+		 ++daysPassed;
          }
          }
  
