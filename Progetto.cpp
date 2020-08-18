@@ -8,6 +8,7 @@
 #include <ostream>
 #include <fstream>
 #include <cmath>
+#include <algorithm>
 //#include <functional>
 
 //global variables
@@ -91,6 +92,13 @@ public:
             else {}
         }
         return dead;
+    }
+
+    void swapTwoCells(int iX, int jX, int iY, int jY) {
+        Condition temp;
+        temp = board_[iX * n_ + jX];
+        board_[iX * n_ + jX] = board_[iY * n_ + jY];
+        board_[iY * n_ + jY] = temp;
     }
 };
 
@@ -225,9 +233,9 @@ auto linearSpread(Population& previous) { //includere uno spread in cui i valori
                 }
                 if (i == adjacentInfects(previous, row, column) &&
                     dis(gen) <= i * beta) { //modello di spread lineare fra (0,0) e (1,beta) 
-                    
+
                     //dis(gen) <= booleanMarker(i) * ( (i-1)*(1-beta)/7 + beta) ) { //linear spread fra (1,beta) e (8,1) con annullamento sullo zero
-                    
+
                     evolved(row, column) = (Condition::I);
                 }
                 else {
@@ -328,6 +336,24 @@ auto nonLinearSpread(Population& previous, int daysPassed) {
         }
     }
     return evolved;
+}
+
+auto cellMover(Population& pop) {
+
+    int iX, jX, iY, jY;
+
+    for (int i = 0; i < pop.getSize(); i++) {
+
+        iX = (rand() + time(nullptr)) % (pop.getSize() - 2) + 1;
+        jX = (rand() + time(nullptr)) % (pop.getSize() - 2) + 1;
+        iY = (rand() + time(nullptr)) % (pop.getSize() - 2) + 1;
+        jY = (rand() + time(nullptr)) % (pop.getSize() - 2) + 1;
+
+        if (pop(iX, jX) != Condition::D && pop(iY, jY) != Condition::D) {
+            pop.swapTwoCells(iX, jX, iY, jY);
+        }
+    }
+    return pop; 
 }
 
 //initializations
@@ -464,7 +490,7 @@ auto initializeParametersNoGraph() { //in case we add more parameters in the fut
 
 auto autoinitialize() {
 
-    double autobeta = 0.4;
+    double autobeta = 0.15;
     double autogamma_ = 0.2;
 
 
@@ -492,6 +518,7 @@ auto execute(ParametersCheck check, int size) {
     //far andare la funzione autonomamente
     while (pop.infectsCounter() != 0) {
         std::this_thread::sleep_for(std::chrono::milliseconds(600));
+        pop = cellMover(pop);
         pop = linearSpread(pop);
         std::cout << "Day: " << dayspassed << "\n";
         gridPrint(pop);
@@ -588,7 +615,7 @@ void printDataToFile(std::vector<dailyReport>& finalReport) {
     report.open("report.txt");
     report <<
         "//Size is " << calculated_size << ", beta is " << beta << ", Gamma is " << gamma_ << "\n";
-    for (int i = 0; i < finalReport.size(); i++) {
+    for (size_t i = 0; i < finalReport.size(); i++) {
         report << i + 1 << std::setw(10) << finalReport[i].daily_S_ << std::setw(10) << finalReport[i].daily_I_ << std::setw(10) << finalReport[i].daily_R_ << std::setw(10) << finalReport[i].daily_D_ << "\n";
     }
     report.close();
