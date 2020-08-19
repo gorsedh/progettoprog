@@ -284,7 +284,7 @@ auto nonLinearSpread(Population& previous, int daysPassed) {
     int previousDayInfects = previous.infectsCounter();
 
     if (daysPassed % 7 == 0) { beta = beta * 1.5; } //questa riga simula la movida del sabato
-    if (daysPassed > 60 && daysPassed < 100) { gamma_ = gamma_ * 1.5; } //dopo 60 giorni dallo scoppio dell'epidemia le tecniche di cura diventano più efficaci
+    if (daysPassed > 60 && daysPassed <= 100) { gamma_ = gamma_ * 1.5; } //dopo 60 giorni dallo scoppio dell'epidemia le tecniche di cura diventano più efficaci
     if (daysPassed > 101) { gamma_ = gamma_ * 2; } //dopo 100 giorni dallo scoppio dell'epidemia le tecniche di cura diventano ancora più efficaci
 
     for (int row = 1; row < size - 1; ++row) {
