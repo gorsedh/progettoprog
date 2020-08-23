@@ -1,15 +1,23 @@
+
 \documentclass[a4paper]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[main=italian, english]{babel}
+\usepackage{graphicx}
 \begin{document}
 \title{Relazione Progetto Programmazione per la Fisica}
-\author{Marco Caporale, Giacomo Giuliani, Massimiliano Stignani}
+\author{Marco Caporale, Giacomo Giuliani}
 \date{Settembre 2020}
 \maketitle
 
 \section{Introduzione}
 Questa relazione ha lo scopo di illustrare lo sviluppo del progetto per l'esame di Programmazione della Fisica dell'Anno Accademico 2019/2020. \\ \\ Il progetto è composto da un programma in linguaggio C++ che simuli lo sviluppo di un'epidemia su una griglia di stati. Il modello di sviluppo associato è il cosiddetto $SIR$, nel quale gli stati di salute delle persone in esame hanno uno sviluppo naturale, inizialmente sono \underline{suscettibili} (S), quindi \underline{infetti} (I), infine \underline{rimossi} (R), categoria che comprende indifferentemente i soggetti guariti e i morti. \\ I passaggi da uno stato al successivo sono associati a due valori di probabilità, $\beta$, la probabilità di un suscettibile di essere infettato quando a contatto con un infetto e $\gamma$, la probabilità di un infetto di diventare un rimosso. \\ 
+
+\section{Requisiti}
+Il programma non richiede particolari requisiti, in particolare per le opzioni con stampa a terminale. \`E comunque necessario assicurarsi che siano disponibili i caratteri colorati per la stampa dal proprio terminale (UBUNTU/Linux e Mac Os), nel caso non venissero caricati è sufficiente chiudere e riaprire il terminale.\\
+Le istruzioni compaiono a schermo.\\
+Per eseguire l'analisi grafica dell'epidemia è necessario il software di analisi dati Root, disponibile su \texttt{root.cern}.
+Al termine del programma verrà chiesto se salvare il report dell'epidemia come \textttt{report.txt}. Inserire questo file nella stessa directory di macro.c ed eseguirvi Root, chiamando prima \texttt{.L macro.c} e poi la funzione desiderata di stampa (opzioni disponibili elencate nella sottosezione Elaborazione dati e Grafica).
 
 \section{Opzione 1}
 Lo sviluppo del progetto è iniziato attraverso la stesura di una  bozza dell'opzione 1, ovvero una stesura molto approssimativa di un'evoluzione lineare della pandemia nel tempo - il codice di tale sviluppo non verrà consegnato con la relazione, ma verranno utilizzati i risultati di quest'ultimo come confronto teorico con il modello principale. 
@@ -28,10 +36,11 @@ Quindi è necessario definire una \texttt{enum Condition} che possa contenere i 
 Questi vengono poi disposti nella \texttt{class Population} a formare il vettore che rappresenti la popolazione in esame. Alla classe sono stati aggiunti alcuni metodi necessari alle altre funzioni del programma, fra questi i metodi di conta dei determinati stati assunti dalle celle. Al metodo di conta dei suscettibili vengono rimossi i soggetti sul bordo della griglia, in quanto vengono definniti di defalt come suscettibili, perciò impossibilitati a modificare il proprio stato di salute.\\
 La rappresentazione grafica del sistema avviene tramite stampa da terminale. Questa risulta efficiente con popolazioni di esigue dimensioni ma rischia di non esserlo per grandi misure della board. Per questo motivo i dati vengono raccolti in un vettore che li stampa su un file di testo \texttt{std::vector<dailyReport> finalReport} per l'elaborazione grafica tramite software Root. Per tale fine è stato aggiunto \texttt{struct dailyReport} che contiene i dati raccolti dai metodi di \texttt{Population} alla fine di ogni giornata.\\
 \subsection{Epidemia}
-Il fulcro del programma consiste nell'effettiva diffusione dell'epidemia lungo la griglia, motivo per cui sono necessarie le funzioni \texttt{adjacentInfects} e \texttt{spread}: la prima conta quanti infetti sono presenti nelle otto celle adiacenti a quella in esame, la seconda, invece, prende in input la precedente popolazione per poi evolverla nella successiva. Il processo di base avviene generando tramite \texttt{uniform real distribution} un numero casualmente distribuito fra 0 e 1. Tale numero viene poi confrontato per ogni cella $Suscettibile$ con la probabilità di contagio, ovvero $\beta$ moltiplicato per il numero di infetti adiacenti alla cella e qualora fosse minore lo stato della cella verrebbe aggiornato ad $Infetta$. Tale relazione nasce dal considerare la probabilità di infezione come la retta passante per i punti $(0;0)$ e (1;$\beta$) nel piano cartesiano. Per le celle $Infette$ invece il numero viene più semplicemente confrontato con il $\gamma$. La funzione \texttt{spread} è stata in seguito soppressa per lasciare spazio alle due funzioni \texttt{linearSpread} e \texttt{nonLinearSpread}.\\ \\ \texttt{linearSpread} viene proposta due versioni, la prima, come versione pura di \texttt{spread}, la seconda, invece, va a sostituire la retta di contagio precedentemente definita con la retta passante per (1;$\beta$) e (8,1).Onde evitare che il valore della probabilitàdi contagio possa essere maggiore di 1 per un valore nullo di \texttt{adjacentInfects} è stata introdotta la funzione \texttt{booleanMarker} che restituisce 0 quando le viene dato in input 0, altrimenti 1. Questo secondo modello è stato lasciato commentato nel codice dal momento che la sua versione più "grezza", la versione pura di \texttt{linearSpread}, produce risultati molto più vicini a quelli attesi del modello $SIR$.\\ \\
+Il fulcro del programma consiste nell'effettiva diffusione dell'epidemia lungo la griglia, motivo per cui sono necessarie le funzioni \texttt{adjacentInfects} e \texttt{spread}: la prima conta quanti infetti sono presenti nelle otto celle adiacenti a quella in esame, la seconda, invece, prende in input la precedente popolazione per poi evolverla nella successiva. Il processo di base avviene generando tramite \texttt{uniform real distribution} un numero casualmente distribuito fra 0 e 1. Tale numero viene poi confrontato per ogni cella $Suscettibile$ con la probabilità di contagio, ovvero $\beta$ moltiplicato per il numero di infetti adiacenti alla cella e qualora fosse minore lo stato della cella verrebbe aggiornato ad $Infetta$. Tale relazione nasce dal considerare la probabilità di infezione come la retta passante per i punti $(0;0)$ e (1;$\beta$) nel piano cartesiano. Per le celle $Infette$ invece il numero viene più semplicemente confrontato con il $\gamma$. La funzione \texttt{spread} è stata in seguito soppressa per lasciare spazio alle due funzioni \texttt{linearSpread} e \texttt{nonLinearSpread}.\\ \\ \texttt{linearSpread} viene proposta due versioni, la prima (Lineare 1), come versione pura di \texttt{spread}, la seconda (Lineare 2), invece, va a sostituire la retta di contagio precedentemente definita con la retta passante per (1;$\beta$) e (8,1).Onde evitare che il valore della probabilitàdi contagio possa essere maggiore di 1 per un valore nullo di \texttt{adjacentInfects} è stata introdotta la funzione \texttt{booleanMarker} che restituisce 0 quando le viene dato in input 0, altrimenti 1. Questo secondo modello è stato lasciato commentato nel codice dal momento che la sua versione più "grezza", la versione pura di \texttt{linearSpread}, produce risultati molto più vicini a quelli attesi del modello $SIR$.\\ \\
 Il modello basato sulla funzione \texttt{nonLinearSpread} utilizzainvece un approcio differente, in primo luogo aggiungendo ai suoi parametri di input anche il tempo passato dall'inizio dell'epidemia \texttt{int daysPassed}, in questo modo, per determinati intervalli di tempo, si possono modificare le variabili $\beta$ e $\gamma$, poi ristabilite dalla funzione di controllo. Esempi applicativi presenti nel progetto sono: la simulazione delle maggiori relazioni interpersonali nei weekend \texttt{if (daysPassed \% 7 == 0) { beta = beta * 1.5; }}, per cui è lecito ipotizzare un aumento del tasso di contagio; inoltre, si è scelto di seguire un modello "svedese", senza quindi simulare eventuali misure particolarmente restrittive, come una quarantena, a favore di uno sviluppo di metodi curativi e un conseguente aumento del tasso di guarigione $\gamma$ - 
-\texttt{if (daysPassed > 60 && daysPassed <= 100) { gamma_ = gamma_ * 1.5; }
-if (daysPassed > 101) { gamma_ = gamma_ * 2; }}.
+\texttt{$if(daysPassed>60&&daysPassed<=100){gamma_=gamma_*1.5;}
+if(daysPassed>101){gamma_=gamma_*2;}$}. \\
+
 \subsection{Inizializzazioni}
 La prima scelta lasciata all'utente aprendo il programma è quale tipo di simulazione si voglia effettuare, piccole popolazioni con output grafico o grandi popolazioni senza output grafico da terminale; ognuna delle precedenti opzioni è associata ad una rispettiva funzione di esecuzione \texttt{execute} e alle rispettive inizializzazioni.\\
 Il programma lascia una discreta libertà di scelta all'utente, in particolare per quanto riguarda le due variabili  $\beta$ e $\gamma$ e la dimensione della popolazione da prendere in esame, attraverso la scelta della grandezza della griglia. Per ognuno di questi parametri sono presenti una o più funzioni di inizializzazione; per quanto riguarda le simulazioni con output grafico la dimensione della popolazione è limitata poichè oltre una determinata soglia la stampa da terminale diventa disordinata e quindi inutile. Viceversa l'opzione per grandi popolazioni è limitata esclusivamente alle prestazioni del pc che esegue il programma, si possono infatti eseguire in tempi ragionevoli simulazioni anche su popolazioni dell'ordine del milione.\\
@@ -40,7 +49,7 @@ Sono inoltre presenti differenti inizializzazioni per il numero iniziale di infe
 L'output grafico con stampa a terminale del programma è disponibile solo per le piccole popolazioni tramite la funzione \texttt{gridPrint}. Ad ogni stato è associata una determinata lettera con un differente colore per facilitare la lettura durante la stampa. \\
 Sia che si utilizzi l'output grafico del terminale o no alla fine dell'epidemia (ovvero quando il numero degli infetti scende a zero) il programma chiederà all'utente se vuole la stampa su file di testo (\texttt{.txt}) del report dell'epidemia, ovvero la conta giornaliera degli stati della popolazione. Tale report può essere graficato tramite l'uso del software di analisi dati Root. Assicurandosi che il file si trovi nella stessa directory da cui si esegue la macro è possibile stampare i grafici con i singoli andamenti di ognuno degli stati possibili (\texttt{graphS()}, \texttt{graphI()}, \texttt{graphD()}) oppure di stampa di tutti e tre gli andamenti su un unico grafico (\texttt{graphEpidemic()}). Utilizzando \texttt{graphAll()} si possono stampare tutti igrafici contemporaneamente.
 \subsection{Estensione del modello $SIR$}
-Terminata la "parte canonica" del progetto, il modello $SIR$ per includere anche la possibilità che le celle possano morire con probabilità associata al quadrato di $\gamma$, con l'evoluzione ad un modello $SIRD$ dove $D$ rappresenta i deceduti.\\ \\ Sulla base dei dati attuali (ultima settimana di agosto, \textit{https://ourworldindata.org/mortality-risk-covid}), il tasso medio di mortalità nella popolazione mondiale è $\mu$ = 0,035, valore che confrontato con i valori consigliati delle variabili $\beta$ e $\gamma$ risulta essere mediamente il quadrato di $\gamma$: la scelta, perciò, di lasciare il tasso di mortalità come valore dipendente dal tasso di guarigione permette di avere una simulazione più realistica dell'epidemia per valori delle variabili fuori dall'intervallo consigliato. 
+Terminata la "parte canonica" del progetto, il modello $SIR$ per includere anche la possibilità che le celle possano morire con probabilità associata al quadrato di $\gamma$, con l'evoluzione ad un modello $SIRD$ dove $D$ rappresenta i deceduti.\\ \\ Sulla base dei dati attuali (ultima settimana di agosto,\\ \textit{https://ourworldindata.org/mortality-risk-covid}), il tasso medio di mortalità nella popolazione mondiale è $\mu$ = 0,035, valore che confrontato con i valori consigliati delle variabili $\beta$ e $\gamma$ risulta essere mediamente il quadrato di $\gamma$: la scelta, perciò, di lasciare il tasso di mortalità come valore dipendente dal tasso di guarigione permette di avere una simulazione più realistica dell'epidemia per valori delle variabili fuori dall'intervallo consigliato. 
 \\ \\
 
 
@@ -48,12 +57,62 @@ Terminata la "parte canonica" del progetto, il modello $SIR$ per includere anche
 L'opzione 2 Può essere facilmente estesa per simulare il movimento delle celle all'opzione 3. Fra un loop e l'altro di propagazione (\texttt{spread}) è possibile aggiungere una funzione che scambi di posizione un determinato numero di celle, per esempio \texttt{size}. Tutto ciò è possibile aggiungendo un metodo che scambi di posizione due celle specifiche avendone le coordinate ed una free function che generi casualmente 4 numeri all'interno della board, quindi non sui bordi. Le celle vengono scambiate salvando la posizione della prima in una variabile temporanea, assegnando alla prima il valore della seconda e infine assegnando il la variabile temporanea alla seconda. Tale modello matematico sfrutta il fatto che due punti presi a caso all'interno di un quadrato di lato $l$ abbiano distanza media $d \approx 0.52l$, simulando quindi uno spostamento di media lunghezza.\\
 Avendo introdotto anche le celle $D$ è necessario controllare che nessuna delle due celle da scambiare sia morta, tale controllo viene effettuato dentro alla stessa funzione che genera le celle da scambiare, \texttt{cellMover}.\\ \\
 Il modello di movimento può essere ulteriormente esteso aggiungendo dei filtri alla generazione dei numeri casuali, per esempio generando le posizioni delle celle da scambiare solamente in determinate regioni della board, per esempio solo nel quadrante superiore.\\
+Il numero di celle in movimento preimpostato è il lato stesso della board. Tale numero è stato scelto perchè assicura contemporaneamente il poter osservare lo scoppio di nuovi focolai nelle opzioni \texttt{manual} e \texttt{auto} ma anche ottenere dei report aderenti al modello atteso. \\ \\
+L'inizializzazione del movimento avviene dove avvengono le inizializzazioni di $\gamma$ e $\beta$, \texttt{checkParameters} infatti era stato costruito nell'ottica di aggiungere altri parametri di inizializzazione.
 
-\section{Requisiti}
-Il programma non richiede particolari requisiti, in particolare per le opzioni con stampa a terminale. \`E comunque necessario assicurarsi che siano disponibili i caratteri colorati per la stampa dal proprio terminale (UBUNTU/Linux e Mac Os), nel caso non venissero caricati è sufficiente chiudere e riaprire il terminale.\\
-Le istruzioni compaiono a schermo.\\
-Per eseguire l'analisi grafica dell'epidemia è necessario il software di analisi dati Root, disponibile su \texttt{root.cern}.
-Al termine del programma verrà chiesto se salvare il report dell'epidemia come \textttt{report.txt}. Inserire questo file nella stessa directory di macro.c ed eseguirvi Root, chiamando prima \texttt{.L macro.c} e poi la funzione desiderata di stampa (opzioni disponibili elencate nella sottosezione Elaborazione dati e Grafica).
+\section{Test}
+I test del progetto sono avvenuti durante tutto il periodo di scrittura. In particolare i test hanno evidenziato in un primo momento l'errato funzionamento di alcune parti del codice fra cui il fatto che un prima bozza di \texttt{Spread()} andasse a interagire in maniera errata con la board, contagiando quasi tutta la popolazione già dal giorno 1. La funzione \texttt{emptyBoard()}, inutile nella versione finale ma comunque inserita come sicurezza in più è stata utile nella risoluzione di questo problema.\\
+ Un altro errore che è stato riscontrato invece è stato il fatto che \texttt{cellMover} andasse a scambiare anche celle del bordo con celle della popolazione, aumentando il numero dei suscettibili durante l'epidemia.\\
+ Il testing dei modelli di \texttt{spread} funzionanti è dovuto avvenire in maniera differente. Essendo la propagazione legata a dei numeri casuali l'assicurarsi del corretto funzionamento non può avvenire se non con un confronto dei report simulati con un modello atteso. Tale metodo non è estremamente rigoroso ma assicura che le propagazioni siano in linea coi valori di $\beta$ e $\gamma$
+ 
+\section{Elaborazione dati}
+ In seguito riportiamo le elaborazioni di alcune epidemie. Con $Size = 200$, $\beta = 0.1$, $\gamma = 0.15$:\\
+ Come è possibile osservare la possibilità di spostamento favorisce l'aderenza della simulazione al modello $SIR$.\\
+% TODO: \usepackage{graphicx} required
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.8\linewidth]{swaplinear1}
+	\caption[Lineare 1 con spostamento]{Lineare 1 con spostamento}
+	\label{fig:swaplinear1}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{swaplinear2}
+	\caption[Lineare 2 con spostamento]{Lineare 2 con spostamento}
+	\label{fig:swaplinear1}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{swapnonlinear}
+	\caption[nonLineare  con spostamento]{Non Lineare con spostamento}
+	\label{fig:swaplinear1}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{nonswapnonlinear}
+	\caption[nonLineare noSpostamento]{Non Lineare senza spostamento}
+	\label{fig:swaplinear1}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{infectsnonlinearnonswap}
+	\caption[Infetti nonLineare noSpostamento]{Infetti di Figura 4}
+	\label{fig:swaplinear1}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{infectslinear2noswap}
+	\caption[Infetti lineare 2 noSpostamento]{Infetti di Lineare 2, senza spostamento}
+	
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{infectslinearswap}
+	\caption[Infetti lineare 2 noSpostamento]{Infetti di opzione lineare 1 con spostamento}
+	
+\end{figure}
+
 
 
 
