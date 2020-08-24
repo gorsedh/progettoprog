@@ -23,49 +23,49 @@ int main()
     std::cout << "b is suggested for very big populations just to have the report to analyze (size>100)\n";
     std::cout << "n is suggested for a non linear spread of a disease over a big population, just for the report to analyze (size>100)\n";
 
-    char askparameters;
+   char askparameters;
     std::vector<dailyReport> finalReport;
     std::cin >> askparameters;
     switch (askparameters) {
     case 'a':
     {
         int const boardSize = initSize();
-        ParametersCheck const checkParAuto = autoinitialize();
+        ParametersCheck const checkParAuto = initializeParameters('a');
         finalReport = execute(checkParAuto, boardSize);
     }
     break;
     case 'd':
     {
         int const boardSize = initSizeNoGraph();
-        ParametersCheck const checkParNoGraph = initializeParameters();
+		ParametersCheck const checkParNoGraph = initializeParameters('b');
         finalReport = noGraphicsExecute(checkParNoGraph, boardSize);
     }
     break;
     case 'b':
     {
         int const boardSize = initSizeNoGraph();
-        ParametersCheck const checkParNoOutput = initializeParameters();
+		ParametersCheck const checkParNoOutput = initializeParameters('b');
         finalReport = bigSimulationExecute(checkParNoOutput, boardSize);
     }
     break;
     case 'n':
     {
         int const boardSize = initSizeNoGraph();
-        ParametersCheck const checkParNoOutput = initializeParameters();
+		ParametersCheck const checkParNoOutput = initializeParameters('b');
         finalReport = bigSimulationExecuteNL(checkParNoOutput, boardSize);
     }
     break;
     case 'm':
     {
         int const boardSize = initSize();
-        ParametersCheck const checkDefault = initializeParameters();
+		ParametersCheck const checkDefault = initializeParameters('b');
         finalReport = execute(checkDefault, boardSize);
     }
     break;
     default:
     {
         int const boardSize = initSize();
-        ParametersCheck const checkDefault = initializeParameters();
+		ParametersCheck const checkDefault = initializeParameters('b');
         finalReport = execute(checkDefault, boardSize);
     }
     }
