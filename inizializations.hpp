@@ -159,32 +159,29 @@ auto initializeParameters(char optionPar) {
 	switch(optionPar) {
 		case 'a': //automatic initialization
 		{
-    double autobeta = 0.15;
-    double autogamma_ = 0.2;
+            double autobeta = 0.15;
+            double autogamma_ = 0.2;
 
-    beta = autobeta;
-    gamma_ = autogamma_;
-    bool cellMove = 1;
+            beta = autobeta;
+            gamma_ = autogamma_;
+            bool cellMove = 1;
 
-    ParametersCheck check = ParametersCheck(autobeta, autogamma_, cellMove);
-    return check;
+            ParametersCheck check = ParametersCheck(autobeta, autogamma_, cellMove);
+            return check;
 		}
-	break;
-		case 'b':
+	    break;
+        case 'b':
 		{
-    double betaMirror = initBeta();
-    double gammaMirror = initgamma_();
-    bool cellMove_ = cellMove();
-    ParametersCheck checker = ParametersCheck(betaMirror, gammaMirror, cellMove);
-    return checker;
+            double betaMirror = initBeta();
+            double gammaMirror = initgamma_();
+            bool cellMove_ = cellMove();
+            ParametersCheck checker = ParametersCheck(betaMirror, gammaMirror, cellMove);
+            return checker;
 		}
-	break;
-		default:
-		{}
-	break;
+	    break;
+        default:{}
+	    break;
 }
 }
-
-
 
 #endif
