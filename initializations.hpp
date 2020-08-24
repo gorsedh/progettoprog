@@ -78,8 +78,16 @@ auto initializeInfect(Population& pop) {
 //initialization of user data
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-int initSize() {
+////////////////////////////////////////////////////////////////////////////////////////////////
+//initialization of user data
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+int initSize(char graphOrNot) {
     int sizeval;
+    switch(graphOrNot) 
+    {
+	case 'g':
+			
     std::cout << "\nPlease enter a valid number as \033[31mboard size\033[0m. (5<x<40), otherwise it will be set as default\n";
     std::cin >> sizeval;
     if (sizeval > 5 && sizeval < 40) {
@@ -88,10 +96,9 @@ int initSize() {
     else {
         return 20;
     }
-}
-
-int initSizeNoGraph() {
-    int sizeval;
+    break;
+	case 'n': //noGraphic case
+    {
     std::cout << "\nPlease enter a valid number as \033[31mboard size\033[0m (x>5, 100 is the suggested size, an higher value will result in a longer epidemics)\n";
     std::cin >> sizeval;
     if (sizeval > 5) {
@@ -101,7 +108,14 @@ int initSizeNoGraph() {
         return 100;
     }
     return sizeval;
+    break;
+	default:
+		{}
+    break;
+     }
+    }
 }
+
 
 double initBeta() {
     double betaval;
