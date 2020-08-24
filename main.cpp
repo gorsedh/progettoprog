@@ -29,42 +29,42 @@ int main()
     switch (askparameters) {
     case 'a':
     {
-        int const boardSize = initSize();
+        int const boardSize = initSize('g');
         ParametersCheck const checkParAuto = initializeParameters('a');
         finalReport = execute(checkParAuto, boardSize);
     }
     break;
     case 'd':
     {
-        int const boardSize = initSizeNoGraph();
+        int const boardSize = initSize('n');
 		ParametersCheck const checkParNoGraph = initializeParameters('b');
         finalReport = noGraphicsExecute(checkParNoGraph, boardSize);
     }
     break;
     case 'b':
     {
-        int const boardSize = initSizeNoGraph();
+        int const boardSize = initSize('n');
 		ParametersCheck const checkParNoOutput = initializeParameters('b');
         finalReport = bigSimulationExecute(checkParNoOutput, boardSize);
     }
     break;
     case 'n':
     {
-        int const boardSize = initSizeNoGraph();
+        int const boardSize = initSize('n');
 		ParametersCheck const checkParNoOutput = initializeParameters('b');
         finalReport = bigSimulationExecuteNL(checkParNoOutput, boardSize);
     }
     break;
     case 'm':
     {
-        int const boardSize = initSize();
+        int const boardSize = initSize('g');
 		ParametersCheck const checkDefault = initializeParameters('b');
         finalReport = execute(checkDefault, boardSize);
     }
     break;
     default:
     {
-        int const boardSize = initSize();
+        int const boardSize = initSize('g');
 		ParametersCheck const checkDefault = initializeParameters('b');
         finalReport = execute(checkDefault, boardSize);
     }
