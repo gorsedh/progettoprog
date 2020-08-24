@@ -32,7 +32,7 @@ TEST_CASE("functionsTest"){
 	CHECK(booleanMarker(10) == 1);
 	CHECK(typeid(booleanMarker(0.5)) == typeid(int(1))); // check that booleanMarker reads every number as integer
 	CHECK(initSize() == 20); // check the default set of initSize
-  CHECK(cellMove() == 1); // check that the cells move themselves for the default option
+        CHECK(cellMove() == 1); // check that the cells move themselves for the default option
 }
 
 /*
