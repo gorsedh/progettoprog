@@ -141,13 +141,6 @@ bool cellMove() {
     else { return 1; }
 }
 
-auto initializeParameters() { //in case we add more parameters in the future
-    double betaMirror = initBeta();
-    double gammaMirror = initgamma_();
-    bool cellMove_ = cellMove();
-    ParametersCheck checker = ParametersCheck(betaMirror, gammaMirror, cellMove);
-    return checker;
-}
 
 /*auto initializeParametersNoGraph() { //in case we add more parameters in the future
     double betaMirror = initBeta();
@@ -158,11 +151,14 @@ auto initializeParameters() { //in case we add more parameters in the future
 }*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-//automatic initialization
+//types of initialization
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-auto autoinitialize() {
-
+auto initializeParameters(char optionPar) {
+	
+	switch(optionPar) {
+		case 'a': //automatic initialization
+		{
     double autobeta = 0.15;
     double autogamma_ = 0.2;
 
@@ -172,6 +168,23 @@ auto autoinitialize() {
 
     ParametersCheck check = ParametersCheck(autobeta, autogamma_, cellMove);
     return check;
+		}
+	break;
+		case 'b':
+		{
+    double betaMirror = initBeta();
+    double gammaMirror = initgamma_();
+    bool cellMove_ = cellMove();
+    ParametersCheck checker = ParametersCheck(betaMirror, gammaMirror, cellMove);
+    return checker;
+		}
+	break;
+		default:
+		{}
+	break;
 }
+}
+
+
 
 #endif
