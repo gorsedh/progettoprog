@@ -35,7 +35,7 @@ TEST_CASE("functionsTest"){
         CHECK(cellMove() == 1); // check that the cells move themselves for the default option
 }
 
-/*
+
 ////////////////////// GRID TEST //////////////////////////
 
 enum class Condition : char { 
@@ -111,13 +111,13 @@ public:
 };
 
 TEST_CASE("operator") {
-    int n;
+        int n;
 	Population s(n);
-	std::vector<Condition> board_;
-    CHECK(s(0, 0) == board_[0]);
+	std::vector<Condition> board_(n*n);
+        CHECK(s(0, 0) == board_[0]);
 	CHECK(s(1, 0) == board_[n]);
 	CHECK(s(0, 1) == board_[1]);
 	CHECK(s(1, 1) == board_[n*1 + 1]);
 	
     
-} */
+} 
