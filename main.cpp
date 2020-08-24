@@ -12,7 +12,7 @@
 //#include <ostream>
 
 #include "structures.cpp"
-#include "inizializations.cpp"
+#include "initializations.cpp"
 #include "functions.cpp"
 
 int main()
