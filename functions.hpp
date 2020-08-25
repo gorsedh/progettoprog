@@ -26,7 +26,8 @@ auto dataCollecting(Population& pop, std::vector<dailyReport>& finalReport) {
     finalReport.push_back(day);
 }
 
-void printDataToFile(std::vector<dailyReport>& finalReport) {
+//create and write the report.txt
+void printDataToFile(std::vector<dailyReport>& finalReport) { 
     int const population_size = (finalReport[1].daily_S_ + finalReport[1].daily_I_ + finalReport[1].daily_R_ + finalReport[1].daily_D_ );
     std::ofstream report;
     report.open("report.txt");
@@ -91,9 +92,10 @@ void gridPrint(Population& pop) { //sistemare gli output
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-//Adjacent infects
+//Adjacent infects 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
+//counts the number of infects adjacent to a cell (in the 8 adjacent cells)
 int adjacentInfects(Population& pop, int row, int column) {
     auto cell = pop(row, column);
     int infect = static_cast<int>(Condition::I);
@@ -106,7 +108,6 @@ int adjacentInfects(Population& pop, int row, int column) {
         for (int j = column - 1; j != column + 2; ++j) {
             int adjacent = static_cast<int>(pop(i, j));
             if (adjacent == infect) { result++; }
-            else {}
         }
     }
     switch (cell) {
@@ -246,7 +247,6 @@ auto nonLinearSpread(Population& previous, int daysPassed) {
                 evolved(row_loop, column_loop) = previous(row_loop, column_loop);
                 break;
             }
-
             default:
                 break;
             }
@@ -274,6 +274,7 @@ auto cellMover(Population& pop) {
     }
 }
 
+//this function is used for the linear #2 spread model, self explanatory
 int booleanMarker(int x) {
     if (x == 0) { return 0; }
     else { return 1; }
@@ -283,6 +284,7 @@ int booleanMarker(int x) {
 //Check function
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
+//this function resets the values of global variables at the end of every day
 auto checkParameters(ParametersCheck check) {
     if (beta != check.betaCheck_) { beta = check.betaCheck_; }
     if (gamma_ != check.gammaCheck_) { gamma_ = check.gammaCheck_; }
@@ -292,6 +294,7 @@ auto checkParameters(ParametersCheck check) {
 //execution functions
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
+//these functions allow the execution of the program
 auto execute(ParametersCheck const check, int const size) {
     Population pop(size);
     std::vector<dailyReport> finalReport;
@@ -302,7 +305,7 @@ auto execute(ParametersCheck const check, int const size) {
     int dayspassed = 1;
     //far andare la funzione autonomamente
     while (pop.infectsCounter() != 0) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(600));
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         if ( cellMove == 1) { if (dayspassed < 50) { cellMover(pop); } } //comment this line to stop the moving of cells
         pop = linearSpread(pop);
         std::cout << "Day: " << dayspassed << "\n";
@@ -388,3 +391,8 @@ auto bigSimulationExecuteNL(ParametersCheck const check, int const size) {
 }
 
 #endif
+
+// After all of this code enjoy these sleepy bunnies
+//    (\(\           /)/)
+//    (-.-)         (-.-)
+//    o_(")(")   (")(")_o
