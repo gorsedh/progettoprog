@@ -12,3 +12,7 @@ You can get *graphic output* of the report by executing the **macro.c** on Root 
 Make sure report.txt and macro.c are in the same directory, to which Root should have access to.
 
 All further instructions will appear on terminal during the execution.
+
+September 2020
+Marco Caporale, Giacomo Giuliani
+Alma Mater Studiorum, Uiversità di Bologna
