@@ -26,6 +26,7 @@ void graphS() {
 auto c1 = new TCanvas();
 TGraph *graphS = new TGraph ("report.txt", "%lg %lg %*lg %*lg %*lg");
 graphS->SetTitle("Susceptibles; Time (days); ");
+graphS->SetMinimum(0);
 c1->SetTitle("Susceptibles");
 graphS->Draw();
 
@@ -43,6 +44,7 @@ void graphI() {
 auto c2 = new TCanvas();
 TGraph *graphI = new TGraph ("report.txt", "%lg %*lg %lg %*lg %*lg");
 graphI->SetTitle("Infects; Time (days); ");
+graphI->SetMinimum(0);
 c2-> SetTitle("Infects");
 graphI->Draw();
 
@@ -60,6 +62,7 @@ void graphR() {
 auto c3 = new TCanvas();
 TGraph *graphR = new TGraph ("report.txt", "%lg %*lg %*lg %lg %*lg");
 graphR->SetTitle("Recovered; Time (days); ");
+graphR->SetMinimum(0);
 c3->SetTitle("Recovered");
 graphR->Draw();
 
@@ -77,6 +80,7 @@ void graphD() {
 auto c4 = new TCanvas();
 TGraph *graphD = new TGraph ("report.txt", "%lg %*lg %*lg %*lg %lg");
 graphD->SetTitle("Dead; Time (days); ");
+graphD->SetMinimum(0);
 c4->SetTitle("Dead");
 graphD->Draw();
 
@@ -100,6 +104,7 @@ TGraph *graphI = new TGraph ("report.txt", "%lg %*lg %lg %*lg %*lg");
 TGraph *graphR = new TGraph ("report.txt", "%lg %*lg %*lg %lg %*lg");
 TGraph *graphD = new TGraph ("report.txt", "%lg %*lg %*lg %*lg %lg");
 
+graphS->SetMinimum(0);
 
 //impostazioni grafiche
 graphS->SetTitle("Epidemic; Time (days); ");
