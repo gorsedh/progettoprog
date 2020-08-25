@@ -115,7 +115,6 @@ int initSize(char graphOrNot) {
     std::cin >> sizeval;
     if (sizeval > 5) { return sizeval + 2; }
     else { return 100; }
-    return sizeval + 2;
     break;
     }
 	default:
