@@ -74,6 +74,7 @@ int main()
         finalReport = execute(checkDefault, boardSize);
     }
     }
+    std::cout << "\a";
     std::cout << "Would you like to get the report for the epidemic?(y/n),\nNon valid input will be considered as an affirmative answer\n";
     char printReport;
     std::cin >> printReport;
