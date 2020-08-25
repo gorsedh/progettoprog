@@ -105,7 +105,7 @@ int initSize(char graphOrNot) {
     {	
     std::cout << "\nPlease enter a valid number as \033[31mboard size\033[0m. (5<x<40), otherwise it will be set as default\n";
     std::cin >> sizeval;
-    if (sizeval > 5 && sizeval < 40) { return sizeval; }
+    if (sizeval > 5 && sizeval < 40) { return sizeval + 2; }
     else { return 20; }
     }
     break;
@@ -113,9 +113,9 @@ int initSize(char graphOrNot) {
     {
     std::cout << "\nPlease enter a valid number as \033[31mboard size\033[0m (x>5, 100 is the suggested size, an higher value will result in a longer epidemics)\n";
     std::cin >> sizeval;
-    if (sizeval > 5) { return sizeval; }
+    if (sizeval > 5) { return sizeval + 2; }
     else { return 100; }
-    return sizeval;
+    return sizeval + 2;
     break;
     }
 	default:
