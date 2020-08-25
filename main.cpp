@@ -17,7 +17,8 @@
 
 int main()
 {
-    std::cout << "Which optionwould you like to use?\n(\033[31ma\033[0m for auto settings, \033[31md\033[0m for disabled graphics, \033[31mb\033[0m for disabled graphics and output,\n\033[31mn\033[0m for a non linear spread and no graphic output, \033[31mm\033[0m for manual settings)\n";
+    std::cout << "This program simulates the evolution of an epidemic, now follow the instructions\n\n";
+    std::cout << "Which option would you like to use?\n(\033[31ma\033[0m for auto settings, \033[31md\033[0m for disabled graphics, \033[31mb\033[0m for disabled graphics and output,\n\033[31mn\033[0m for a non linear spread and no graphic output, \033[31mm\033[0m for manual settings)\n";
     std::cout << "a and manual are suggested for small populations to get a graphical output of the epidemic (size<30)\n";
     std::cout << "d is suggested for big populations (size>30)\n";
     std::cout << "b is suggested for very big populations just to have the report to analyze (size>100)\n";
