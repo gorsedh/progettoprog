@@ -1,3 +1,7 @@
+/*This is the main function of the project, 
+to run the program execute this file.
+Make sure to include the header files and their corresponding cpp file in the main directory*/
+
 #include <cassert>
 #include <chrono>
 #include <cmath>
