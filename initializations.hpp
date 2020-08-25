@@ -57,7 +57,7 @@ auto initializeInfect(Population& pop) {
     case '3':
         {
         int numOfInfects;
-        std::cout << "Instert number of infects\n";
+        std::cout << "Insert number of infects\n";
         std::cin >> numOfInfects;
         for (int x = 0; x <= numOfInfects; x++) {
             int i = (rand() + time(nullptr)) % (pop.getSize()-2) + 1;
