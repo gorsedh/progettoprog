@@ -1,3 +1,5 @@
+/*This file performs all the initializations for the execution of main.cpp*/
+
 #ifndef SIR_INITIALIZATIONS_HPP
 #define SIR_INITIALIZATIONS_HPP
 
@@ -187,7 +189,7 @@ double emptyCell_() {
 auto initializeParameters(char optionPar) {
 	
 	switch(optionPar) {
-		case 'a': //automatic initialization
+		case 'a': //automatic initialization, user only has to decide the size of the board
 		{
             double autobeta = 0.15;
             double autogamma_ = 0.2;
@@ -201,7 +203,7 @@ auto initializeParameters(char optionPar) {
             return checker;
 		}
 	    break;
-		case 'b':
+		case 'b': //manual input of parameters
 		{
             double betaMirror = initBeta();
             double gammaMirror = initgamma_();
