@@ -162,7 +162,7 @@ double emptyCell_() {
     std::cout << "\nWhat percentage of the population do you want to \033[31mremove\033[0m? (0 < x < 0.8)\n";
     std::cout << "Don't remove more than 80% of the population\n";
     std::cin >> emptyCellVal;
-    if (emptyCellVal > 0 && emptyCellVal < 0.8) { return emptyCellVal; }
+    if (emptyCellVal >= 0 && emptyCellVal < 0.8) { return emptyCellVal; }
     else { emptyCellVal = 0.3; 
         return emptyCellVal;}
     //assicurarci che siano meno del totale-> vediamo dopo come fare
