@@ -1,3 +1,5 @@
+/*This file contains all the functions needed for the execution of main.cpp*/
+
 #ifndef SIR_FUNCTIONS_HPP
 #define SIR_FUNCTIONS_HPP
 
