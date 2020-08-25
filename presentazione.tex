@@ -1,4 +1,3 @@
-
 \documentclass[a4paper]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -54,15 +53,21 @@ Terminata la "parte canonica" del progetto, il modello $SIR$ per includere anche
 
 
 \section{Opzione 3}
-L'opzione 2 Può essere facilmente estesa per simulare il movimento delle celle all'opzione 3. Fra un loop e l'altro di propagazione (\texttt{spread}) è possibile aggiungere una funzione che scambi di posizione un determinato numero di celle, per esempio \texttt{size}. Tutto ciò è possibile aggiungendo un metodo che scambi di posizione due celle specifiche conoscendone le coordinate e una free function che generi casualmente 4 numeri all'interno della board, quindi non sui bordi. Le celle vengono scambiate attraverso un processo suddivisoin tre fasi: in primis, si salva la posizione della prima cella in una variabile temporanea, quindi si assegna alla prima cella il valore della seconda e infine la variabile temporanea alla seconda cella. Tale modello matematico sfrutta il fatto che due punti presi a caso all'interno di un quadrato di lato $l$ abbiano distanza media $d \approx 0.52l$, simulando quindi uno spostamento di media lunghezza.\\
+
+\subsection{Spostamento}
+L'opzione 2 Può essere facilmente estesa per simulare il movimento delle celle all'opzione 3. Fra un loop e l'altro di propagazione (\texttt{spread}) è possibile aggiungere una funzione che scambi di posizione un determinato numero di celle, per esempio \texttt{size}. Tutto ciò è possibile aggiungendo un metodo che scambi di posizione due celle specifiche avendone le coordinate ed una free function che generi casualmente 4 numeri all'interno della board, quindi non sui bordi. Le celle vengono scambiate salvando la posizione della prima in una variabile temporanea, assegnando alla prima il valore della seconda e infine assegnando il la variabile temporanea alla seconda. Tale modello matematico sfrutta il fatto che due punti presi a caso all'interno di un quadrato di lato $l$ abbiano distanza media $d \approx 0.52l$, simulando quindi uno spostamento di media lunghezza.\\
 Avendo introdotto anche le celle $D$ è necessario controllare che nessuna delle due celle da scambiare sia morta, tale controllo viene effettuato dentro alla stessa funzione che genera le celle da scambiare, \texttt{cellMover}.\\ \\
-Il modello di movimento può essere ulteriormente esteso aggiungendo dei filtri alla generazione dei numeri casuali, per esempio generando le posizioni delle celle da scambiare solamente in determinate regioni della board oppure invertire le celle in un solo quadrante superiore.\\
-Il numero di celle in movimento preimpostato corrisponde al lato stesso della board. Tale numero è stato scelto perchè assicura contemporaneamente il poter osservare lo scoppio di nuovi focolai nelle opzioni \texttt{manual} e \texttt{auto} ma anche ottenere dei report aderenti al modello atteso. \\ \\
-L'inizializzazione del movimento avviene dove avvengono le inizializzazioni di $\gamma$ e $\beta$, \texttt{checkParameters} infatti era stato costruito nell'ottica di aggiungere altri parametri di inizializzazione.
+Il modello di movimento può essere ulteriormente esteso aggiungendo dei filtri alla generazione dei numeri casuali, per esempio generando le posizioni delle celle da scambiare solamente in determinate regioni della board, per esempio solo nel quadrante superiore.\\
+Il numero di celle in movimento preimpostato è il lato stesso della board. Tale numero è stato scelto perchè assicura contemporaneamente il poter osservare lo scoppio di nuovi focolai nelle opzioni \texttt{manual} e \texttt{auto} ma anche ottenere dei report aderenti al modello atteso. \\ \\
+L'inizializzazione del movimento avviene dove avvengono le inizializzazioni di $\gamma$ e $\beta$, \texttt{checkParameters} infatti era stato costruito nell'ottica di aggiungere altri parametri di inizializzazione.\\
+\subsection{Celle vuote}
+L'estensione del programma ad una opzione 3 non sarebbe completa senza aggiungere alle celle la possibilità di essere vuote, simulando quindi uno spazio più grande all'interno del quale le celle possano spostarsi. Per fare ciò viene aggiunta l'opzione $E$ (Empty) alla \texttt{Enum}. Viene data all'utente la possibilità di scegliere la frazione di celle da svuotare. Tale parametro viene salvato assieme agli altri parametri inseriti dall'utente.\\
+Nel codice la funzione che svuota le celle della \texttt{board} viene chiamata dopo l'inizializzazione degli infetti, è pertanto necessario che tale funzione non vada ad eliminare celle infette. Viene impostata quindi per eliminare solo celle suscettibili e non di bordo conn una generazione casuale simile a quella vista per l'inizializzazione degli infetti.\\
+Se prima non era necessario assicurarsi che venisse selezionata casualmente più volte la stessa cella, visto che ai fini del propagarsi dell'epidemia conta solo che ci sia almeno un infetto, per l'eliminazione delle celle è necessario assicurarsi che il numero di eliminazioni sia quanto più possibile vicino a quello atteso dall'utente. Viene perciò inserito un contatore che tenga conto di quante volte l'operazione avviene con successo. Si definisce ora un ulteriore problema, ovvero che in situazioni estreme di popolazioni con molti malati iniziali e numerose eliminazioni (l'utente può giungere ad eliminare fino all'80\% delle celle) il programma continui a vuoto a tentare eliminazioni senza avere a disposizione ulteriori celle da eliminare, o comunque talmente poche che sia improbabile generarle casualmente. Come sorta di correttivo viene aggiunto un ulteriore contatore che tenga conto dei tentativi effettuati. Se tale numero raggiunge 100 volte il numero di celle da eliminare il programma termina l'eliminazione e procede alle fasi successive. Il numero 100 è stato scelto solo per l'estrema improbabilità che un buon input risulti in un numero così elevato di tentativi.\\
 
 \section{Test}
 I test del progetto sono avvenuti durante tutto il periodo di scrittura. In particolare i test hanno evidenziato in un primo momento l'errato funzionamento di alcune parti del codice fra cui il fatto che un prima bozza di \texttt{Spread()} andasse a interagire in maniera errata con la board, contagiando quasi tutta la popolazione già dal giorno 1. La funzione \texttt{emptyBoard()}, inutile nella versione finale ma comunque inserita come sicurezza in più è stata utile nella risoluzione di questo problema.\\
- Un altro errore riscontrato è stato il fatto che \texttt{cellMover} andasse a scambiare anche celle del bordo con celle della popolazione, aumentando il numero dei suscettibili durante l'epidemia.\\
+ Un altro errore che è stato riscontrato invece è stato il fatto che \texttt{cellMover} andasse a scambiare anche celle del bordo con celle della popolazione, aumentando il numero dei suscettibili durante l'epidemia.\\
  Il testing dei modelli di \texttt{spread} funzionanti è dovuto avvenire in maniera differente. Essendo la propagazione legata a dei numeri casuali l'assicurarsi del corretto funzionamento non può avvenire se non con un confronto dei report simulati con un modello atteso. Tale metodo non è estremamente rigoroso ma assicura che le propagazioni siano in linea coi valori di $\beta$ e $\gamma$
  
 \section{Elaborazione dati}
@@ -75,38 +80,38 @@ I test del progetto sono avvenuti durante tutto il periodo di scrittura. In part
 	\caption[Lineare 1 con spostamento]{Lineare 1 con spostamento}
 	\label{fig:swaplinear1}
 \end{figure}
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.8\linewidth]{swaplinear2}
 	\caption[Lineare 2 con spostamento]{Lineare 2 con spostamento}
 	\label{fig:swaplinear1}
 \end{figure}
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.8\linewidth]{swapnonlinear}
 	\caption[nonLineare  con spostamento]{Non Lineare con spostamento}
 	\label{fig:swaplinear1}
 \end{figure}
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.8\linewidth]{nonswapnonlinear}
 	\caption[nonLineare noSpostamento]{Non Lineare senza spostamento}
 	\label{fig:swaplinear1}
 \end{figure}
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.8\linewidth]{infectsnonlinearnonswap}
 	\caption[Infetti nonLineare noSpostamento]{Infetti di Figura 4}
 	\label{fig:swaplinear1}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{infectslinear2noswap}
 	\caption[Infetti lineare 2 noSpostamento]{Infetti di Lineare 2, senza spostamento}
 	
 \end{figure}
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{infectslinearswap}
 	\caption[Infetti lineare 2 noSpostamento]{Infetti di opzione lineare 1 con spostamento}
