@@ -12,6 +12,7 @@
 //Board emptier 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
+//virtually useless, was helpful during debug and provides an extra layer of safety
 auto emptyBoard(Population& pop) { //
     for (int i = 0; i < pop.getSize(); i++) {
         for (int j = 0; j < pop.getSize(); j++) {
@@ -24,10 +25,11 @@ auto emptyBoard(Population& pop) { //
 //infects initializations
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-auto initializeCornerInfect(Population& pop) { //inizializzo un malato in 1,1 (2,2)
+auto initializeCornerInfect(Population& pop) { //initialize an infect in 1,1 (2,2)
     pop(1, 1) = (Condition::I);
 }
 
+//user input infect initializations
 auto initializeInfect(Population& pop) {
     char option_;
     std::cout << "\nChoose how many infects you want in the population (type the number of the option): \n1) 1 Random infect on the board\n" <<
@@ -74,6 +76,11 @@ auto initializeInfect(Population& pop) {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+// Cell emptier
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+//this function eliminates cells randomly to allow movement
 auto cellEmptier (Population& pop, ParametersCheck check, int size) {
     double cellsToRemove;
     cellsToRemove = (size * size * check.emptyCells_); //floor inutile, protegge dal bad imput dell'utente
@@ -97,6 +104,7 @@ auto cellEmptier (Population& pop, ParametersCheck check, int size) {
 //initialization of user data
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
+//size
 int initSize(char graphOrNot) {
     int sizeval;
     switch(graphOrNot) 
@@ -123,6 +131,7 @@ int initSize(char graphOrNot) {
     }
 }
 
+//beta
 double initBeta() {
     double betaval;
     std::cout << "\nEnter value for \033[31mbeta\033[0m (0 < x < 1), otherwise it will be set as default\n";
@@ -136,6 +145,7 @@ double initBeta() {
     return betaval;
 }
 
+//gamma
 double initgamma_() {
     double gamma_val;
     std::cout << "\nEnter value for \033[31mgamma\033[0m (0 < x < 1), otherwise it will be set as default\n";
@@ -149,6 +159,7 @@ double initgamma_() {
     return gamma_val;
 }
 
+//if cells are allowed to move
 bool cellMove() {
     char cellMove_;
     std::cout << "\nDo you want to enable the \033[31mmovement\033[0m of cells? (y/n)\n";
@@ -157,6 +168,7 @@ bool cellMove() {
     else { return 1; }
 }
 
+//what percentage of cells should be emptied
 double emptyCell_() {
     double emptyCellVal;
     std::cout << "\nWhat percentage of the population do you want to \033[31mremove\033[0m? (0 < x < 0.8)\n";
