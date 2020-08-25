@@ -9,36 +9,7 @@
 #include <random>
 #include <cmath>
 
-////////////////////// FREE FUNCTIONS TEST //////////////////////////
-int booleanMarker(int x) {
-    if (x == 0) { return 0; }
-    else { return 1; }
-} 
-int initSize() {
-    int sizeval;
-    if (sizeval > 5 && sizeval < 40) {
-        return sizeval;
-    }
-    else {
-        return 20;
-    }
-}
 
-bool cellMove() {
-    char cellMove_;
-    if (cellMove_ == 'n') { return 0; }
-    else { return 1; }
-}
-
-
-TEST_CASE("functionsTest"){
-	
-	CHECK(booleanMarker(10) == 1);
-	CHECK(typeid(booleanMarker(0.5)) == typeid(int(1))); // check that booleanMarker reads every number as integer, of course it did, otherwise this test wouldn't be here
-	CHECK(initSize() == 20); // check the default set of initSize
-    CHECK(cellMove() == 1); // check that the cells move themselves for the default option
-} 
-	
 ////////////////////// GRID TEST //////////////////////////
 
 
@@ -164,5 +135,47 @@ TEST_CASE("general check of Counters") {
   CHECK(rec == 4);
   CHECK(dead == 4);
 }
-				
+			
+TEST_CASE("struct parametersCheck  constructor") {
+	auto a = ParametersCheck(0., 0., true, 0.);
+	CHECK(a.betaCheck_ == 0);
+	CHECK(a.gammaCheck_ == 0);
+	CHECK(a.cellMove_ == true );
+	CHECK(a.emptyCells_ == 0.);
+
+	auto b = ParametersCheck(0.3, 0.4, false, 0.9);
+	CHECK(b.betaCheck_ == 0.3);
+	CHECK(b.gammaCheck_ == 0.4);
+	CHECK(b.cellMove_ == false );
+	CHECK(b.emptyCells_ == 0.9);
+}
+
+////////////////////// FUNCTIONS TEST //////////////////////////
+int booleanMarker(int x) {
+    if (x == 0) { return 0; }
+    else { return 1; }
+} 
+int initSize() {
+    int sizeval;
+    if (sizeval > 5 && sizeval < 40) {
+        return sizeval;
+    }
+    else {
+        return 20;
+    }
+}
+
+bool cellMove() {
+    char cellMove_;
+    if (cellMove_ == 'n') { return 0; }
+    else { return 1; }
+}
+
+
+TEST_CASE("functionsTest, first heat"){
 	
+    CHECK(booleanMarker(10) == 1);
+    CHECK(typeid(booleanMarker(0.5)) == typeid(int(1))); // check that booleanMarker reads every number as integer, of course it did, otherwise this test wouldn't be here
+    CHECK(initSize() == 20); // check the default set of initSize
+    CHECK(cellMove() == 1); // check that the cells move themselves for the default option
+} 
