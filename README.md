@@ -13,6 +13,6 @@ Make sure report.txt and macro.c are in the same directory, to which Root should
 
 All further instructions will appear on terminal during the execution.
 
-September 2020
+September 2020\
 Marco Caporale, Giacomo Giuliani\
 Alma Mater Studiorum, Uiversità di Bologna
