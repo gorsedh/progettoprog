@@ -15,4 +15,4 @@ All further instructions will appear on terminal during the execution.
 
 September 2020\
 Marco Caporale, Giacomo Giuliani\
-Alma Mater Studiorum, Uiversità di Bologna
+Alma Mater Studiorum, Università di Bologna
