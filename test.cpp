@@ -7,7 +7,7 @@
 #include <vector>
 #include <typeinfo>
 #include <random>
-#include <cmath>
+#include <cassert>
 
 
 ////////////////////// GRID TEST //////////////////////////
@@ -34,7 +34,7 @@ TEST_CASE("check board") {
 	
 	
 	for(int it = 0; it < 5; ++it){ 
-		////check that a casual person on the board is not infect/recovered/died or the cell is  empty
+		////check that a casual person on the board is not infect/recovered/died or the cell is  empty 
 	int iTry = (rand() + time(nullptr)) % (s.getSize());
 	int jTry = (rand() + time(nullptr)) % (s.getSize());
 	if(it == 0) {
@@ -171,6 +171,14 @@ bool cellMove() {
     else { return 1; }
 }
 
+auto emptyBoard(Population& pop) { 
+    for (int i = 0; i < pop.getSize(); i++) {
+        for (int j = 0; j < pop.getSize(); j++) {
+            pop(i, j) = (Condition::S);
+        }
+    }
+}
+
 int adjacentInfects(Population& pop, int row, int column) {
 	assert(row != 0 && column != 0);
     auto cell = pop(row, column);
@@ -256,3 +264,4 @@ TEST_CASE("functionsTest, first heat"){
 	   CHECK(popz(7,7) == Condition::D);
 	   CHECK(popz(1,1) == Condition::S); // the function doesn't swap a cell on the edge	
 }
+
