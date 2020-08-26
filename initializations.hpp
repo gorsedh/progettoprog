@@ -151,7 +151,7 @@ double initBeta() {
 double initgamma_() {
     double gamma_val;
     std::cout << "\nEnter value for \033[31mgamma\033[0m (0 < x < 1), otherwise it will be set as default\n";
-    std::cout << "Suggested values are between 0.05 and 0.2, higher values will result in faster recovering\n";
+    std::cout << "Suggested values are between 0.1 and 0.2, higher values will result in faster recovering\n";
     std::cin >> gamma_val;
     if (gamma_val > 0 && gamma_val < 1) { gamma_ = gamma_val; }
     else {
