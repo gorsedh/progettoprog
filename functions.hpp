@@ -99,6 +99,7 @@ void gridPrint(Population& pop) { //sistemare gli output
 
 //counts the number of infects adjacent to a cell (in the 8 adjacent cells)
 int adjacentInfects(Population& pop, int row, int column) {
+    assert(row != 0 && column != 0);
     auto cell = pop(row, column);
     int infect = static_cast<int>(Condition::I);
     int result = static_cast<int>(pop(row, column));
