@@ -223,26 +223,6 @@ auto cellMover(Population& pop) {
     }
 }
 
-auto cellEmptier (Population& pop, ParametersCheck check, int size) {
-    double cellsToRemove;
-    cellsToRemove = (size * size * check.emptyCells_); //floor inutile, protegge dal bad imput dell'utente
-    int removedCounter = 0;
-    int removeTries = 0;
-    while (removedCounter < cellsToRemove) {
-
-        int iC = ((rand() + time(nullptr)) % (size - 2)) + 1;
-        int jC = ((rand() + time(nullptr)) % (size - 2)) + 1;
-
-        if (pop(iC, jC) == (Condition::S)) {
-            pop(iC, jC) = (Condition::E);
-           removedCounter++;
-        } else { removeTries++;}
-
-        if (removeTries > 100 * cellsToRemove) { removedCounter = size * size; }
-    }
-}
-
-
 TEST_CASE("functionsTest, first heat"){
 	
 		CHECK(booleanMarker(10) == 1);
