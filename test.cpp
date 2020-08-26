@@ -171,11 +171,88 @@ bool cellMove() {
     else { return 1; }
 }
 
+int adjacentInfects(Population& pop, int row, int column) {
+	assert(row != 0 && column != 0);
+    auto cell = pop(row, column);
+    int infect = static_cast<int>(Condition::I);
+    int result = static_cast<int>(pop(row, column));
+    if (result == 1) {
+        result--;
+    }
+    for (int i = row - 1; i != row + 2; ++i) {
+        for (int j = column - 1; j != column + 2; ++j) {
+            int adjacent = static_cast<int>(pop(i, j));
+            if (adjacent == infect) { result++; }
+            else {}
+        }
+    }
+    switch (cell) {
+    case Condition::I:
+        return (result - 1);
+        break;
+    default:
+        return result;
+        break;
+    }
+}
+
+auto cellMover(Population& pop) {
+
+    int iX, jX, iY, jY;
+    int redSize = static_cast<int> (pop.getSize()) - 2; //avoid swapping cells on border
+    int numOfSwaps = floor((redSize * redSize)/10);
+    for (int i = 0; i < numOfSwaps; i++) {
+
+        iX = (rand() + time(nullptr)) % (redSize) + 1;
+        jX = (rand() + time(nullptr)) % (redSize) + 1;
+        iY = (rand() + time(nullptr)) % (redSize) + 1;
+        jY = (rand() + time(nullptr)) % (redSize) + 1;
+
+        if (pop(iX, jX) != Condition::D && pop(iY, jY) != Condition::D) {
+            pop.swapTwoCells(iX, jX, iY, jY);
+        }
+    }
+}
+
 
 TEST_CASE("functionsTest, first heat"){
 	
-    CHECK(booleanMarker(10) == 1);
-    CHECK(typeid(booleanMarker(0.5)) == typeid(int(1))); // check that booleanMarker reads every number as integer, of course it did, otherwise this test wouldn't be here
-    CHECK(initSize() == 20); // check the default set of initSize
-    CHECK(cellMove() == 1); // check that the cells move themselves for the default option
-} 
+	CHECK(booleanMarker(10) == 1);
+	CHECK(typeid(booleanMarker(0.5)) == typeid(int(1))); // check that booleanMarker reads every number as integer, of course it did, otherwise this test wouldn't be here
+	CHECK(initSize() == 20); // check the default set of initSize
+        CHECK(cellMove() == 1); // check that the cells move themselves for the default option
+	int n = 10;
+	Population pop(n);
+	emptyBoard(pop);
+	int iTry = (rand() + time(nullptr)) % (pop.getSize());
+	int jTry = (rand() + time(nullptr)) % (pop.getSize());
+	    CHECK(pop(iTry, jTry) != Condition::I); // it seems I've already seen this test
+	    CHECK(pop(iTry, jTry) != Condition::E);
+        CHECK(pop(iTry, jTry) != Condition::R);
+		CHECK(pop(iTry, jTry) != Condition::D);
+	
+		CHECK(adjacentInfects(pop, 1, 1) == 0);
+		CHECK(adjacentInfects(pop, 1, 3) == 0);
+		CHECK(adjacentInfects(pop, 4, 4) == 0);
+	
+	int m = 10;
+	Population popz(m);
+	popz(2,2) = Condition::I;
+	popz(2,3) = Condition::I;
+	popz(4,4) = Condition::I;
+	popz(3,5) = Condition::I;
+	popz(4,6) = Condition::I;
+	   CHECK(adjacentInfects(popz, 2, 2) == 1); //the function doesn't consider the central cell
+	   CHECK(adjacentInfects(popz, 3, 3) == 3);
+	   CHECK(adjacentInfects(popz, 4, 1) == 0);
+	   CHECK(adjacentInfects(popz, 4, 5) == 3);
+	   CHECK(adjacentInfects(popz, 4, 6) == 1);
+	   CHECK(adjacentInfects(popz, 3, 6) == 2);
+	
+	popz(3,3) = Condition::D;
+	popz(7,7) = Condition::D;
+	cellMover(popz);
+	   CHECK(popz(3,3) == Condition::D); // the function doesn't swap dead
+	   CHECK(popz(7,7) == Condition::D);
+	   CHECK(popz(1,1) == Condition::S); // the function doesn't swap a cell on the edge	
+}
