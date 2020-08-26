@@ -7,6 +7,7 @@
 #include <vector>
 #include <typeinfo>
 #include <random>
+//#include <cmath>
 #include <cassert>
 
 
@@ -222,12 +223,31 @@ auto cellMover(Population& pop) {
     }
 }
 
+auto cellEmptier (Population& pop, ParametersCheck check, int size) {
+    double cellsToRemove;
+    cellsToRemove = (size * size * check.emptyCells_); //floor inutile, protegge dal bad imput dell'utente
+    int removedCounter = 0;
+    int removeTries = 0;
+    while (removedCounter < cellsToRemove) {
+
+        int iC = ((rand() + time(nullptr)) % (size - 2)) + 1;
+        int jC = ((rand() + time(nullptr)) % (size - 2)) + 1;
+
+        if (pop(iC, jC) == (Condition::S)) {
+            pop(iC, jC) = (Condition::E);
+           removedCounter++;
+        } else { removeTries++;}
+
+        if (removeTries > 100 * cellsToRemove) { removedCounter = size * size; }
+    }
+}
+
 
 TEST_CASE("functionsTest, first heat"){
 	
-	CHECK(booleanMarker(10) == 1);
-	CHECK(typeid(booleanMarker(0.5)) == typeid(int(1))); // check that booleanMarker reads every number as integer, of course it did, otherwise this test wouldn't be here
-	CHECK(initSize() == 20); // check the default set of initSize
+		CHECK(booleanMarker(10) == 1);
+	    CHECK(typeid(booleanMarker(0.5)) == typeid(int(1))); // check that booleanMarker reads every number as integer, of course it did, otherwise this test wouldn't be here
+	    CHECK(initSize() == 20); // check the default set of initSize
         CHECK(cellMove() == 1); // check that the cells move themselves for the default option
 	int n = 10;
 	Population pop(n);
@@ -262,6 +282,27 @@ TEST_CASE("functionsTest, first heat"){
 	cellMover(popz);
 	   CHECK(popz(3,3) == Condition::D); // the function doesn't swap dead
 	   CHECK(popz(7,7) == Condition::D);
-	   CHECK(popz(1,1) == Condition::S); // the function doesn't swap a cell on the edge	
+	   CHECK(popz(1,1) == Condition::S); // the function doesn't swap a cell on the edge
+	
+	int smallerSize;
+	Population r(smallerSize);
+	if(smallerSize == 3) {
+		r(2,2) = Condition::I;
+		cellMover(r);
+		CHECK(r(2,2) == Condition::I);
+		CHECK(r(1,1) != Condition::I);
+	} else if (smallerSize == 4) {
+		r(2,2) = Condition::R;
+		r(2,3) = Condition::D;
+		r(3,2) = Condition::I;
+		r(3,3) = Condition::E;
+		cellMover(r);
+		CHECK(r(2,2) != Condition::S); // no cell from the edges swapped
+		CHECK(r(2,3) != Condition::S);
+		CHECK(r(3,2) != Condition::S);
+		CHECK(r(3,3) != Condition::S);
+		CHECK(r(2,3) == Condition::D);
+		CHECK(r(3,3) != Condition::E);
+		
 }
-
+}
