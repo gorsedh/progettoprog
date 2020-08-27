@@ -348,7 +348,7 @@ int booleanMarker(int x)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 //this function resets the values of global variables at the end of every day
-auto checkParameters(ParametersCheck check)
+auto checkParameters(ParametersCheck &check)
 {
     if (beta != check.betaCheck_)
     {
@@ -365,7 +365,7 @@ auto checkParameters(ParametersCheck check)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 //these functions allow the execution of the program
-auto execute(ParametersCheck const check, int const size)
+auto execute(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
@@ -401,7 +401,7 @@ auto execute(ParametersCheck const check, int const size)
     }
 }
 
-auto noGraphicsExecute(ParametersCheck const check, int const size)
+auto noGraphicsExecute(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
@@ -433,7 +433,7 @@ auto noGraphicsExecute(ParametersCheck const check, int const size)
     }
 }
 
-auto bigSimulationExecute(ParametersCheck const check, int const size)
+auto bigSimulationExecute(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
@@ -459,7 +459,7 @@ auto bigSimulationExecute(ParametersCheck const check, int const size)
     }
 }
 
-auto bigSimulationExecuteNL(ParametersCheck const check, int const size)
+auto bigSimulationExecuteNL(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
