@@ -15,9 +15,9 @@ Make sure to include the header files and their corresponding cpp file in the ma
 //#include <algorithm>
 //#include <ostream>
 
-#include "structures.cpp"
-#include "initializations.cpp"
-#include "functions.cpp"
+#include "structures.hpp"
+#include "initializations.hpp"
+#include "functions.hpp"
 
 int main()
 {
