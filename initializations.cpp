@@ -1,8 +1,5 @@
 /*This file performs all the initializations for the execution of main.cpp*/
 
-//#ifndef SIR_INITIALIZATIONS_CPP
-//#define SIR_INITIALIZATIONS_CPP
-
 #include "initializations.hpp"
 
 #include <cmath>
@@ -304,5 +301,3 @@ ParametersCheck initializeParameters(char optionPar)
     break;
     }
 }
-
-//#endif
