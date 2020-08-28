@@ -190,7 +190,7 @@ double initBeta()
 }
 
 //gamma
-double initgamma_()
+double initGamma_()
 {
     double gamma_val;
     std::cout << "\nEnter value for \033[31mgamma\033[0m (0 < x < 1), otherwise it will be set as default\n";
@@ -269,7 +269,7 @@ auto initializeParameters(char optionPar)
     case 'b': //manual input of parameters
     {
         double betaMirror = initBeta();
-        double gammaMirror = initgamma_();
+        double gammaMirror = initGamma_();
         bool cellMove_ = cellMove();
         double emptyCell = emptyCell_();
 
