@@ -3,8 +3,8 @@ This project simulates the outbreak of an epidemic in a 2D population.
 
 This program is written in C++, make sure to have the proper tools to run it.
 
-To run the program execute **main.cpp** and the others **.cpp** files \
-So **$path\... g++ main.cpp structures.cpp initializations.cpp functions.cpp** \
+To run the program execute main.cpp and the others .cpp files 
+So $path\... g++ main.cpp structures.cpp initializations.cpp functions.cpp
 For the execution of the core program is not required any external library.
 
 It is possible to save a report of the simulation as report.txt
