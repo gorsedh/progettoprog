@@ -100,7 +100,7 @@ public:
         return rec;
     }
 
-    int deadCounter()
+    int deadCounter() const
     {
         int dead = 0;
         for (int i = 0; i < n_ * n_; i++)
