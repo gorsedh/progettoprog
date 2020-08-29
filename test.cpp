@@ -305,7 +305,7 @@ TEST_CASE("functionsTest, first heat")
 	CHECK(adjacentInfects(pop, 1, 3) == 0);
 	CHECK(adjacentInfects(pop, 4, 4) == 0);
 
-	Population popz = 10; // si fa uso della conversione implicita
+	Population popz = 10; // using implicit conversion in order to avoid declaring too many int variables to construct new Population
 	popz(2, 2) = Condition::I;
 	popz(2, 3) = Condition::I;
 	popz(4, 4) = Condition::I;
