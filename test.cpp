@@ -291,8 +291,8 @@ TEST_CASE("functionsTest, first heat")
 	CHECK(typeid(booleanMarker(0.5)) == typeid(int(1))); // check that booleanMarker reads every number as integer, of course it did, otherwise this test wouldn't be here
 	CHECK(initSize() == 20);							 // check the default set of initSize
 	CHECK(cellMove() == 1);								 // check that the cells move themselves for the default option
-	int n = 10;
-	Population pop(n);
+	
+	Population pop = 10;
 	emptyBoard(pop);
 	int iTry = (rand() + time(nullptr)) % (pop.getSize());
 	int jTry = (rand() + time(nullptr)) % (pop.getSize());
@@ -305,8 +305,7 @@ TEST_CASE("functionsTest, first heat")
 	CHECK(adjacentInfects(pop, 1, 3) == 0);
 	CHECK(adjacentInfects(pop, 4, 4) == 0);
 
-	int m = 10;
-	Population popz(m);
+	Population popz = 10; // si fa uso della conversione implicita
 	popz(2, 2) = Condition::I;
 	popz(2, 3) = Condition::I;
 	popz(4, 4) = Condition::I;
