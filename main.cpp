@@ -1,5 +1,6 @@
 /*This is the main function of the project, 
-to run the program execute this file.
+to run the program execute this file and the others .cpp
+g++ main.cpp initializations.cpp functions.cpp structures.cpp
 Make sure to include the header files and their corresponding cpp file in the main directory*/
 
 #include <cassert>
@@ -15,9 +16,9 @@ Make sure to include the header files and their corresponding cpp file in the ma
 //#include <algorithm>
 //#include <ostream>
 
-#include "functions.hpp"
-#include "initializations.hpp"
 #include "structures.hpp"
+#include "initializations.hpp"
+#include "functions.hpp"
 
 int main()
 {
