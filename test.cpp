@@ -230,37 +230,29 @@ auto emptyBoard(Population &pop)
 
 int adjacentInfects(Population &pop, int row, int column)
 {
-	assert(row != 0 && column != 0);
-	auto cell = pop(row, column);
-	int infect = static_cast<int>(Condition::I);
-	int result = static_cast<int>(pop(row, column));
-	if (result == 1)
-	{
-		result--;
-	}
-	for (int i = row - 1; i != row + 2; ++i)
-	{
-		for (int j = column - 1; j != column + 2; ++j)
-		{
-			int adjacent = static_cast<int>(pop(i, j));
-			if (adjacent == infect)
-			{
-				result++;
-			}
-			else
-			{
-			}
-		}
-	}
-	switch (cell)
-	{
-	case Condition::I:
-		return (result - 1);
-		break;
-	default:
-		return result;
-		break;
-	}
+    //assert(row != 0 && column != 0);
+    auto cell = pop(row, column);
+    int result = 0;
+    //count only adjacents, not the central one
+    for (int i = row - 1; i != row + 2; ++i)
+    {
+        for (int j = column - 1; j != column + 2; ++j)
+        {
+            if (pop(i,j) == Condition::I)
+            {
+                result++;
+            }
+        }
+    }
+    switch (cell)
+    {
+    case Condition::I:
+        return (result - 1);
+        break;
+    default:
+        return result;
+        break;
+    }
 }
 
 auto cellMover(Population &pop)
