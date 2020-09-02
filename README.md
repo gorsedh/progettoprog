@@ -19,4 +19,6 @@ https://github.com/onqtam/doctest/blob/master/doctest/doctest.h
 
 September 2020\
 Marco Caporale, Giacomo Giuliani\
-Alma Mater Studiorum, Università di Bologna
+Alma Mater Studiorum, Università di Bologna\
+
+Any further changes done to the program after 31/8/2020 can be found in a separate branch.
