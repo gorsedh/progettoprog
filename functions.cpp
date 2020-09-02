@@ -158,10 +158,10 @@ Population linearSpread(Population &previous)
                     ++i;
                 }
                 if (i == adjacentInfects(previous, row_loop, column_loop) &&
-                    dis(gen) <= i * beta)
-                { //modello di spread lineare fra (0,0) e (1,beta)
-                    // dis(gen) <= booleanMarker(i) * ( (i-1)*(1-beta)/7 + beta) ) { //linear spread fra (1,beta) e (8,1) con annullamento sullo zero
+                    dis(gen) <= i * beta) //modello di spread lineare fra (0,0) e (1,beta)
+                    // dis(gen) <= booleanMarker(i) * ( (i-1)*(1-beta)/7 + beta) ) //linear spread fra (1,beta) e (8,1) con annullamento sullo zero
                     //commentare a scelta una delle due linee precedenti/choose one of the two previous lines to commentate
+                {
                     evolved(row_loop, column_loop) = (Condition::I);
                 }
                 break;
