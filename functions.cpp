@@ -355,7 +355,9 @@ void checkParameters(ParametersCheck const &check)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 //these functions allow the execution of the program
-std::vector<dailyReport> execute(ParametersCheck const &check, int const size)
+using Execute = std::vector<dailyReport>;
+
+ Execute standard(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
@@ -387,7 +389,7 @@ std::vector<dailyReport> execute(ParametersCheck const &check, int const size)
     return finalReport;
 }
 
-std::vector<dailyReport> noGraphicsExecute(ParametersCheck const &check, int const size)
+Execute noGraphics(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
@@ -415,7 +417,7 @@ std::vector<dailyReport> noGraphicsExecute(ParametersCheck const &check, int con
     return finalReport;
 }
 
-std::vector<dailyReport> bigSimulationExecute(ParametersCheck const &check, int const size)
+Execute bigLinearSimulation(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
@@ -437,7 +439,7 @@ std::vector<dailyReport> bigSimulationExecute(ParametersCheck const &check, int 
     return finalReport;
 }
 
-std::vector<dailyReport> bigSimulationExecuteNL(ParametersCheck const &check, int const size)
+Execute bigNonLinearSimulation(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
