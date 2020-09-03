@@ -18,7 +18,7 @@
 
 void dataPrint(Population &pop)
 {
-    std::cout << "S = " << pop.susceptiblesCounter() << ", I = " << pop.infectsCounter() << ", R = " << pop.recoveredCounter() << ", D = " << pop.deadCounter() << "\n";
+    std::cout << "S = " << pop.susceptiblesCounter() << "\t I = " << pop.infectsCounter() << "\t R = " << pop.recoveredCounter() << "\t D = " << pop.deadCounter() << "\n";
 }
 
 void dataCollecting(Population &pop, std::vector<dailyReport> &finalReport)
