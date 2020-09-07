@@ -103,7 +103,7 @@ void gridPrint(Population &pop)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 //counts the number of infects adjacent to a cell (in the 8 adjacent cells)
-int adjacentInfects(Population &pop, int row, int column)
+inline int adjacentInfects(Population &pop, int row, int column)
 {
     auto cell = pop(row, column);
     int result = 0;
@@ -299,7 +299,7 @@ Population nonLinearSpread(Population &previous, int daysPassed)
 }
 
 //this function moves cells
-void cellMover(Population &pop)
+inline void cellMover(Population &pop)
 {
 
     int iX, jX, iY, jY;
@@ -321,7 +321,7 @@ void cellMover(Population &pop)
 }
 
 //this function is used for the linear #2 spread model, self explanatory
-int booleanMarker(int x)
+inline int booleanMarker(int x)
 {
     if (x == 0)
     {
@@ -338,7 +338,7 @@ int booleanMarker(int x)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 //this function resets the values of global variables at the end of every day
-void checkParameters(ParametersCheck const &check)
+inline void checkParameters(ParametersCheck const &check)
 {
     if (beta != check.betaCheck_)
     {

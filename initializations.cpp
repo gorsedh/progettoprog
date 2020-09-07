@@ -94,7 +94,7 @@ void initializeInfect(Population &pop)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 //this function eliminates cells randomly to allow movement
-void cellEmptier(Population &pop, ParametersCheck check, int size)
+void cellEmptier(Population &pop, ParametersCheck check, int size) //check was already const
 {
     double cellsToRemove;
     cellsToRemove = (size * size * check.emptyCells_);
@@ -248,6 +248,7 @@ double emptyCell_()
         emptyCellVal = 0.3;
         return emptyCellVal;
     }
+    //assicurarci che siano meno del totale-> vediamo dopo come fare
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
