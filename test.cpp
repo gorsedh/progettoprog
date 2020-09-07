@@ -1,7 +1,6 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 #include "structures.hpp"
-// al compilatore non piacciono nè functions.hpp nè initializations.hpp
 
 #include <iostream>
 #include <vector>

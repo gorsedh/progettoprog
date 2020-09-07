@@ -97,7 +97,7 @@ void initializeInfect(Population &pop)
 void cellEmptier(Population &pop, ParametersCheck check, int size)
 {
     double cellsToRemove;
-    cellsToRemove = (size * size * check.emptyCells_); //floor inutile, protegge dal bad imput dell'utente
+    cellsToRemove = (size * size * check.emptyCells_);
     int removedCounter = 0;
     int removeTries = 0;
     while (removedCounter < cellsToRemove)
@@ -248,7 +248,6 @@ double emptyCell_()
         emptyCellVal = 0.3;
         return emptyCellVal;
     }
-    //assicurarci che siano meno del totale-> vediamo dopo come fare
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
