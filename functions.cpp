@@ -1,6 +1,4 @@
 /*This file contains all the functions needed for the execution of main.cpp*/
-//#ifndef SIR_FUNCTIONS_CPP
-//#define SIR_FUNCTIONS_CPP
 
 #include "functions.hpp"
 
@@ -463,8 +461,6 @@ std::vector<dailyReport> bigSimulationExecuteNL(ParametersCheck const &check, in
     }
     return finalReport;
 }
-
-//#endif
 
 // After all of this code enjoy these sleepy bunnies
 //    (\(\           /)/)
