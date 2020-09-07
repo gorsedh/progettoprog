@@ -1,6 +1,5 @@
 /*This is the main function of the project, 
-to run the program execute this file and the others .cpp
-g++ main.cpp initializations.cpp functions.cpp structures.cpp
+to run the program execute this file.
 Make sure to include the header files and their corresponding cpp file in the main directory*/
 
 #include <cassert>
@@ -38,42 +37,42 @@ int main()
     {
         int const boardSize = initSize('g');
         ParametersCheck const checkParAuto = initializeParameters('a');
-        finalReport = standard(checkParAuto, boardSize);
+        finalReport = execute(checkParAuto, boardSize);
     }
     break;
     case 'd':
     {
         int const boardSize = initSize('n');
         ParametersCheck const checkParNoGraph = initializeParameters('b');
-        finalReport = noGraphics(checkParNoGraph, boardSize);
+        finalReport = noGraphicsExecute(checkParNoGraph, boardSize);
     }
     break;
     case 'b':
     {
         int const boardSize = initSize('n');
         ParametersCheck const checkParNoOutput = initializeParameters('b');
-        finalReport = bigLinearSimulation(checkParNoOutput, boardSize);
+        finalReport = bigSimulationExecute(checkParNoOutput, boardSize);
     }
     break;
     case 'n':
     {
         int const boardSize = initSize('n');
         ParametersCheck const checkParNoOutput = initializeParameters('b');
-        finalReport = bigNonLinearSimulation(checkParNoOutput, boardSize);
+        finalReport = bigSimulationExecuteNL(checkParNoOutput, boardSize);
     }
     break;
     case 'm':
     {
         int const boardSize = initSize('g');
         ParametersCheck const checkDefault = initializeParameters('b');
-        finalReport = standard(checkDefault, boardSize);
+        finalReport = execute(checkDefault, boardSize);
     }
     break;
     default:
     {
         int const boardSize = initSize('g');
         ParametersCheck const checkDefault = initializeParameters('b');
-        finalReport = standard(checkDefault, boardSize);
+        finalReport = execute(checkDefault, boardSize);
     }
     }
     std::cout << "\a";
@@ -89,6 +88,4 @@ int main()
         printDataToFile(finalReport);
         std::cout << "You will find the report in the directory of this file, remember to cancel it before running the program again!\n";
     }
-    //std::this_thread::sleep_for(std::chrono::seconds(1));
-    //std::cout << "\033c" << '\n';	
 }

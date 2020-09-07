@@ -1,5 +1,8 @@
 /*This file performs all the initializations for the execution of main.cpp*/
 
+//#ifndef SIR_INITIALIZATIONS_CPP
+//#define SIR_INITIALIZATIONS_CPP
+
 #include "initializations.hpp"
 
 #include <cmath>
@@ -94,7 +97,7 @@ void initializeInfect(Population &pop)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 //this function eliminates cells randomly to allow movement
-void cellEmptier(Population &pop, ParametersCheck check, int size) //check was already const
+void cellEmptier(Population &pop, ParametersCheck check, int size)
 {
     double cellsToRemove;
     cellsToRemove = (size * size * check.emptyCells_);
@@ -301,3 +304,5 @@ ParametersCheck initializeParameters(char optionPar)
     break;
     }
 }
+
+//#endif

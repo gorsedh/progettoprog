@@ -230,29 +230,37 @@ auto emptyBoard(Population &pop)
 
 int adjacentInfects(Population &pop, int row, int column)
 {
-    //assert(row != 0 && column != 0);
-    auto cell = pop(row, column);
-    int result = 0;
-    //count only adjacents, not the central one
-    for (int i = row - 1; i != row + 2; ++i)
-    {
-        for (int j = column - 1; j != column + 2; ++j)
-        {
-            if (pop(i,j) == Condition::I)
-            {
-                result++;
-            }
-        }
-    }
-    switch (cell)
-    {
-    case Condition::I:
-        return (result - 1);
-        break;
-    default:
-        return result;
-        break;
-    }
+	assert(row != 0 && column != 0);
+	auto cell = pop(row, column);
+	int infect = static_cast<int>(Condition::I);
+	int result = static_cast<int>(pop(row, column));
+	if (result == 1)
+	{
+		result--;
+	}
+	for (int i = row - 1; i != row + 2; ++i)
+	{
+		for (int j = column - 1; j != column + 2; ++j)
+		{
+			int adjacent = static_cast<int>(pop(i, j));
+			if (adjacent == infect)
+			{
+				result++;
+			}
+			else
+			{
+			}
+		}
+	}
+	switch (cell)
+	{
+	case Condition::I:
+		return (result - 1);
+		break;
+	default:
+		return result;
+		break;
+	}
 }
 
 auto cellMover(Population &pop)
@@ -283,8 +291,8 @@ TEST_CASE("functionsTest, first heat")
 	CHECK(typeid(booleanMarker(0.5)) == typeid(int(1))); // check that booleanMarker reads every number as integer, of course it did, otherwise this test wouldn't be here
 	CHECK(initSize() == 20);							 // check the default set of initSize
 	CHECK(cellMove() == 1);								 // check that the cells move themselves for the default option
-	
-	Population pop = 10;
+	int n = 10;
+	Population pop(n);
 	emptyBoard(pop);
 	int iTry = (rand() + time(nullptr)) % (pop.getSize());
 	int jTry = (rand() + time(nullptr)) % (pop.getSize());
@@ -297,7 +305,8 @@ TEST_CASE("functionsTest, first heat")
 	CHECK(adjacentInfects(pop, 1, 3) == 0);
 	CHECK(adjacentInfects(pop, 4, 4) == 0);
 
-	Population popz = 10; // using implicit conversion in order to avoid declaring too many int variables to construct new Population
+	int m = 10;
+	Population popz(m);
 	popz(2, 2) = Condition::I;
 	popz(2, 3) = Condition::I;
 	popz(4, 4) = Condition::I;

@@ -127,10 +127,9 @@ public:
     }*/
 
     //This function allows us to swap 2 cells given their coordinates
-    //Doesn't perform any check on the input given, make sure to pass safe values
     void swapTwoCells(int iX, int jX, int iY, int jY)
     {
-        if (iX < n_ && jX < n_ && iY < n_ && jY < n_)
+        if (iX < n_ && jX < n_ && iY < n_ && jY < n_ /*&& iX >= 0 && jX >= 0 && iY >= 0 && jY >= 0*/)
         {
             Condition temp;
             temp = board_[iX * n_ + jX];
