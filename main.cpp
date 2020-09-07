@@ -38,42 +38,42 @@ int main()
     {
         int const boardSize = initSize('g');
         ParametersCheck const checkParAuto = initializeParameters('a');
-        finalReport = execute(checkParAuto, boardSize);
+        finalReport = standard(checkParAuto, boardSize);
     }
     break;
     case 'd':
     {
         int const boardSize = initSize('n');
         ParametersCheck const checkParNoGraph = initializeParameters('b');
-        finalReport = noGraphicsExecute(checkParNoGraph, boardSize);
+        finalReport = noGraphics(checkParNoGraph, boardSize);
     }
     break;
     case 'b':
     {
         int const boardSize = initSize('n');
         ParametersCheck const checkParNoOutput = initializeParameters('b');
-        finalReport = bigSimulationExecute(checkParNoOutput, boardSize);
+        finalReport = bigLinearSimulation(checkParNoOutput, boardSize);
     }
     break;
     case 'n':
     {
         int const boardSize = initSize('n');
         ParametersCheck const checkParNoOutput = initializeParameters('b');
-        finalReport = bigSimulationExecuteNL(checkParNoOutput, boardSize);
+        finalReport = bigNonLinearSimulation(checkParNoOutput, boardSize);
     }
     break;
     case 'm':
     {
         int const boardSize = initSize('g');
         ParametersCheck const checkDefault = initializeParameters('b');
-        finalReport = execute(checkDefault, boardSize);
+        finalReport = standard(checkDefault, boardSize);
     }
     break;
     default:
     {
         int const boardSize = initSize('g');
         ParametersCheck const checkDefault = initializeParameters('b');
-        finalReport = execute(checkDefault, boardSize);
+        finalReport = standard(checkDefault, boardSize);
     }
     }
     std::cout << "\a";
@@ -89,4 +89,6 @@ int main()
         printDataToFile(finalReport);
         std::cout << "You will find the report in the directory of this file, remember to cancel it before running the program again!\n";
     }
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::cout << "\033c" << '\n';	
 }
