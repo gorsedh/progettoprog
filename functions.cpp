@@ -209,7 +209,7 @@ Population linearSpread(Population &previous)
 }
 
 //spread non lineare, maggiore il numero di malati più lenta la guarigione e più lento il contagio
-//i suscettibili si ammalano più lentamente, i malati guariscono più lentamente
+//i suscettibili si ammalano più lentamente
 Population nonLinearSpread(Population &previous, int daysPassed)
 {
     int size = previous.getSize();
