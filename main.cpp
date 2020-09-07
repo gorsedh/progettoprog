@@ -89,6 +89,6 @@ int main()
         printDataToFile(finalReport);
         std::cout << "You will find the report in the directory of this file, remember to cancel it before running the program again!\n";
     }
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    std::cout << "\033c" << '\n';	
+    //std::this_thread::sleep_for(std::chrono::seconds(1));
+    //std::cout << "\033c" << '\n';	
 }
