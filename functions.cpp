@@ -18,7 +18,7 @@
 
 void dataPrint(Population &pop)
 {
-   std::cout << "S = " << pop.susceptiblesCounter() << ", I = " << pop.infectsCounter() << ", R = " << pop.recoveredCounter() << ", D = " << pop.deadCounter() << "\n";
+    std::cout << "S = " << pop.susceptiblesCounter() << ", I = " << pop.infectsCounter() << ", R = " << pop.recoveredCounter() << ", D = " << pop.deadCounter() << "\n";
 }
 
 void dataCollecting(Population &pop, std::vector<dailyReport> &finalReport)
@@ -103,7 +103,7 @@ void gridPrint(Population &pop)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 //counts the number of infects adjacent to a cell (in the 8 adjacent cells)
-inline int adjacentInfects(Population &pop, int row, int column)
+int adjacentInfects(Population &pop, int row, int column)
 {
     auto cell = pop(row, column);
     int result = 0;
@@ -299,7 +299,7 @@ Population nonLinearSpread(Population &previous, int daysPassed)
 }
 
 //this function moves cells
-inline void cellMover(Population &pop)
+void cellMover(Population &pop)
 {
 
     int iX, jX, iY, jY;
@@ -321,7 +321,7 @@ inline void cellMover(Population &pop)
 }
 
 //this function is used for the linear #2 spread model, self explanatory
-inline int booleanMarker(int x)
+int booleanMarker(int x)
 {
     if (x == 0)
     {
@@ -338,7 +338,7 @@ inline int booleanMarker(int x)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 //this function resets the values of global variables at the end of every day
-inline void checkParameters(ParametersCheck const &check)
+void checkParameters(ParametersCheck const &check)
 {
     if (beta != check.betaCheck_)
     {
@@ -355,9 +355,7 @@ inline void checkParameters(ParametersCheck const &check)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 //these functions allow the execution of the program
-using Execute = std::vector<dailyReport>;
-
- Execute standard(ParametersCheck const &check, int const size)
+std::vector<dailyReport> execute(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
@@ -389,7 +387,7 @@ using Execute = std::vector<dailyReport>;
     return finalReport;
 }
 
-Execute noGraphics(ParametersCheck const &check, int const size)
+std::vector<dailyReport> noGraphicsExecute(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
@@ -417,7 +415,7 @@ Execute noGraphics(ParametersCheck const &check, int const size)
     return finalReport;
 }
 
-Execute bigLinearSimulation(ParametersCheck const &check, int const size)
+std::vector<dailyReport> bigSimulationExecute(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
@@ -439,7 +437,7 @@ Execute bigLinearSimulation(ParametersCheck const &check, int const size)
     return finalReport;
 }
 
-Execute bigNonLinearSimulation(ParametersCheck const &check, int const size)
+std::vector<dailyReport> bigSimulationExecuteNL(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
