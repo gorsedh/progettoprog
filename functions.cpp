@@ -16,19 +16,19 @@
 //Data collecting functions
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-void dataPrint(Population &pop)
+void dataPrint(Population const &pop)
 {
     std::cout << "S = " << pop.susceptiblesCounter() << ", I = " << pop.infectsCounter() << ", R = " << pop.recoveredCounter() << ", D = " << pop.deadCounter() << "\n";
 }
 
-void dataCollecting(Population &pop, std::vector<dailyReport> &finalReport)
+void dataCollecting(Population const &pop, std::vector<dailyReport> &finalReport)
 {
     dailyReport day = dailyReport(pop.susceptiblesCounter(), pop.infectsCounter(), pop.recoveredCounter(), pop.deadCounter());
     finalReport.push_back(day);
 }
 
 //create and write the report.txt
-void printDataToFile(std::vector<dailyReport> &finalReport)
+void printDataToFile(std::vector<dailyReport> const &finalReport)
 {
     int const population_size = (finalReport[1].daily_S_ + finalReport[1].daily_I_ + finalReport[1].daily_R_ + finalReport[1].daily_D_);
     std::ofstream report;
@@ -45,7 +45,7 @@ void printDataToFile(std::vector<dailyReport> &finalReport)
 //Printing on terminal function
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-void gridPrint(Population &pop)
+void gridPrint(Population const &pop)
 { //sistemare gli output
     std::cout << "   ";
     for (int edge = 0; edge < pop.getSize(); ++edge)
