@@ -145,7 +145,6 @@ int initSize(char graphOrNot) //gRAPH vs nOGRAPH
             return 20;
         }
     }
-    break;
     case 'n': //noGraphic case
     {
         std::cout << "\nPlease enter a valid number as \033[31mboard size\033[0m (x>5, 100 is the suggested size, an higher value will result in a longer epidemics)\n";
@@ -158,7 +157,6 @@ int initSize(char graphOrNot) //gRAPH vs nOGRAPH
         {
             return 100;
         }
-        break;
     }
     default:
     {
@@ -172,10 +170,8 @@ int initSize(char graphOrNot) //gRAPH vs nOGRAPH
         {
             return 100;
         }
-        break;
     }
-    break;
-    }
+   }
 }
 
 //beta
