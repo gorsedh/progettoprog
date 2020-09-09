@@ -144,6 +144,7 @@ int initSize(char graphOrNot) //gRAPH vs nOGRAPH
         {
             return 20;
         }
+        break;
     }
     case 'n': //noGraphic case
     {
@@ -157,6 +158,7 @@ int initSize(char graphOrNot) //gRAPH vs nOGRAPH
         {
             return 100;
         }
+        break;
     }
     default:
     {
@@ -171,6 +173,7 @@ int initSize(char graphOrNot) //gRAPH vs nOGRAPH
             return 100;
         }
     }
+    break;
    }
 }
 
