@@ -103,7 +103,7 @@ void gridPrint(Population &pop)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 //counts the number of infects adjacent to a cell (in the 8 adjacent cells)
-int adjacentInfects(Population &pop, int row, int column)
+inline int adjacentInfects(Population &pop, int row, int column)
 {
     auto cell = pop(row, column);
     int result = 0;
@@ -321,7 +321,7 @@ void cellMover(Population &pop)
 }
 
 //this function is used for the linear #2 spread model, self explanatory
-int booleanMarker(int x)
+inline int booleanMarker(int x)
 {
     if (x == 0)
     {
@@ -355,7 +355,8 @@ void checkParameters(ParametersCheck const &check)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 //these functions allow the execution of the program
-std::vector<dailyReport> execute(ParametersCheck const &check, int const size)
+using Execute = std::vector<dailyReport>;
+Execute standard(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
@@ -387,7 +388,7 @@ std::vector<dailyReport> execute(ParametersCheck const &check, int const size)
     return finalReport;
 }
 
-std::vector<dailyReport> noGraphicsExecute(ParametersCheck const &check, int const size)
+Execute NoGraphics(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
@@ -415,7 +416,7 @@ std::vector<dailyReport> noGraphicsExecute(ParametersCheck const &check, int con
     return finalReport;
 }
 
-std::vector<dailyReport> bigSimulationExecute(ParametersCheck const &check, int const size)
+Execute BigLinearSimulation(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
@@ -437,7 +438,7 @@ std::vector<dailyReport> bigSimulationExecute(ParametersCheck const &check, int 
     return finalReport;
 }
 
-std::vector<dailyReport> bigSimulationExecuteNL(ParametersCheck const &check, int const size)
+Execute BigNonLinearSimulation(ParametersCheck const &check, int const size)
 {
     Population pop(size);
     std::vector<dailyReport> finalReport;
