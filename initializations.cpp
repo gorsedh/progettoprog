@@ -136,45 +136,21 @@ int initSize(char graphOrNot) //gRAPH vs nOGRAPH
     {
         std::cout << "\nPlease enter a valid number as \033[31mboard size\033[0m. (5<x<40), otherwise it will be set as default\n";
         std::cin >> sizeval;
-        if (sizeval > 5 && sizeval < 40)
-        {
-            return sizeval + 2;
-        }
-        else
-        {
-            return 20;
-        }
-        break;
-    }
+        return (sizeval > 5 && sizeval < 40) ? sizeval + 2 : 20;
+	}
     case 'n': //noGraphic case
     {
         std::cout << "\nPlease enter a valid number as \033[31mboard size\033[0m (x>5, 100 is the suggested size, an higher value will result in a longer epidemics)\n";
         std::cin >> sizeval;
-        if (sizeval > 5)
-        {
-            return sizeval + 2;
-        }
-        else
-        {
-            return 100;
-        }
-        break;
+        return (sizeval > 5) ? sizeval + 2 : 100;
     }
     default:
     {
          std::cout << "\nPlease enter a valid number as \033[31mboard size\033[0m (x>5, 100 is the suggested size, an higher value will result in a longer epidemics)\n";
         std::cin >> sizeval;
-        if (sizeval > 5)
-        {
-            return sizeval + 2;
-        }
-        else
-        {
-            return 100;
-        }
+        return (sizeval > 5) ? sizeval + 2 : 100;
     }
-    break;
-   }
+  }
 }
 
 //beta
@@ -221,14 +197,7 @@ bool cellMove()
     char cellMove_;
     std::cout << "\nDo you want to enable the \033[31mmovement\033[0m of cells? (y/n)\n";
     std::cin >> cellMove_;
-    if (cellMove_ == 'n')
-    {
-        return 0;
-    }
-    else
-    {
-        return 1;
-    }
+    return (cellMove_ == 'n') ? 0 : 1;
 }
 
 //what percentage of cells should be emptied
