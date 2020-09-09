@@ -299,7 +299,7 @@ Population nonLinearSpread(Population &previous, int daysPassed)
 }
 
 //this function moves cells
-void cellMover(Population &pop)
+inline void cellMover(Population &pop)
 {
 
     int iX, jX, iY, jY;
@@ -338,7 +338,7 @@ inline int booleanMarker(int x)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 //this function resets the values of global variables at the end of every day
-void checkParameters(ParametersCheck const &check)
+inline void checkParameters(ParametersCheck const &check)
 {
     if (beta != check.betaCheck_)
     {
