@@ -136,18 +136,39 @@ int initSize(char graphOrNot) //gRAPH vs nOGRAPH
     {
         std::cout << "\nPlease enter a valid number as \033[31mboard size\033[0m. (5<x<40), otherwise it will be set as default\n";
         std::cin >> sizeval;
+		while (std::cin.fail())
+    {
+        std::cin.clear();
+        std::cin.ignore();
+        std::cout << "Not a valid number. Please reenter: ";
+        std::cin >> sizeval;
+    }
         return (sizeval > 5 && sizeval < 40) ? sizeval + 2 : 20;
 	}
     case 'n': //noGraphic case
     {
         std::cout << "\nPlease enter a valid number as \033[31mboard size\033[0m (x>5, 100 is the suggested size, an higher value will result in a longer epidemics)\n";
         std::cin >> sizeval;
+		while (std::cin.fail())
+    {
+        std::cin.clear();
+        std::cin.ignore();
+        std::cout << "Not a valid number. Please reenter: ";
+        std::cin >> sizeval;
+    }
         return (sizeval > 5) ? sizeval + 2 : 100;
     }
     default:
     {
          std::cout << "\nPlease enter a valid number as \033[31mboard size\033[0m (x>5, 100 is the suggested size, an higher value will result in a longer epidemics)\n";
         std::cin >> sizeval;
+		while (std::cin.fail())
+    {
+        std::cin.clear();
+        std::cin.ignore();
+        std::cout << "Not a valid number. Please reenter: ";
+        std::cin >> sizeval;
+    }
         return (sizeval > 5) ? sizeval + 2 : 100;
     }
   }
@@ -160,6 +181,13 @@ double initBeta()
     std::cout << "\nEnter value for \033[31mbeta\033[0m (0 < x < 1), otherwise it will be set as default\n";
     std::cout << "Suggested values are between 0.1 and 0.2, higher values will result in faster spreading\n";
     std::cin >> betaval;
+	while (std::cin.fail())
+    {
+        std::cin.clear();
+        std::cin.ignore();
+        std::cout << "Not a valid number. Please reenter: ";
+        std::cin >> betaval;
+    }
     if (betaval > 0 && betaval < 1)
     {
         beta = betaval;
@@ -179,6 +207,13 @@ double initGamma_()
     std::cout << "\nEnter value for \033[31mgamma\033[0m (0 < x < 1), otherwise it will be set as default\n";
     std::cout << "Suggested values are between 0.1 and 0.2, higher values will result in faster recovering\n";
     std::cin >> gamma_val;
+	while (std::cin.fail())
+    {
+        std::cin.clear();
+        std::cin.ignore();
+        std::cout << "Not a valid number. Please reenter: ";
+        std::cin >> gamma_val;
+    }
     if (gamma_val > 0 && gamma_val < 1)
     {
         gamma_ = gamma_val;
@@ -207,6 +242,13 @@ double emptyCell_()
     std::cout << "\nWhat percentage of the population do you want to \033[31mremove\033[0m? (0 < x < 0.8)\n";
     std::cout << "Don't remove more than 80% of the population\n";
     std::cin >> emptyCellVal;
+	while (std::cin.fail())
+    {
+        std::cin.clear();
+        std::cin.ignore();
+        std::cout << "Not a valid number. Please reenter: ";
+        std::cin >> emptyCellVal;
+    }
     if (emptyCellVal >= 0 && emptyCellVal < 0.8)
     {
         return emptyCellVal;
