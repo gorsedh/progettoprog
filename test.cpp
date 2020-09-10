@@ -181,39 +181,18 @@ TEST_CASE("struct parametersCheck  constructor")
 ////////////////////// FUNCTIONS TEST //////////////////////////
 int booleanMarker(int x)
 {
-	if (x == 0)
-	{
-		return 0;
-	}
-	else
-	{
-		return 1;
-	}
+	return (x == 0) ? 0 : 1;
 }
 int initSize()
 {
 	int sizeval;
-	if (sizeval > 5 && sizeval < 40)
-	{
-		return sizeval;
-	}
-	else
-	{
-		return 20;
-	}
+	return (sizeval > 5 && sizeval < 40) ? sizeval : 20;
 }
 
 bool cellMove()
 {
 	char cellMove_;
-	if (cellMove_ == 'n')
-	{
-		return 0;
-	}
-	else
-	{
-		return 1;
-	}
+	return (cellMove_ == 'n') ? 0 : 1;
 }
 
 auto emptyBoard(Population &pop)
