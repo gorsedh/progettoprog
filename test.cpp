@@ -254,7 +254,7 @@ auto cellMover(Population &pop)
 	}
 }
 
-TEST_CASE("functionsTest, first heat")
+TEST_CASE("functionsTest")
 {
 
 	CHECK(booleanMarker(10) == 1);
