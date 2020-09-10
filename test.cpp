@@ -1,12 +1,13 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 #include "structures.hpp"
+#include "initializations.hpp"
+#include "functions.hpp"
 
 #include <iostream>
 #include <vector>
 #include <typeinfo>
 #include <random>
-//#include <cmath>
 #include <cassert>
 
 ////////////////////// GRID TEST //////////////////////////
@@ -25,7 +26,7 @@ TEST_CASE("operator()")
 TEST_CASE("check board")
 {
 	int n;
-	Population s(n);
+	Population s = n; // si fa uso della conversione implicita
 	CHECK(s(0, 0) == Condition::S);
 	CHECK(s(1, 1) == Condition::S);
 
@@ -56,7 +57,7 @@ TEST_CASE("check board")
 TEST_CASE("another check board")
 {
 	int n;
-	Population s(n);
+	Population s = n;
 
 	for (int i = 0; i < n; i++)
 	{
@@ -103,7 +104,7 @@ TEST_CASE("check susceptibleCounter")
 TEST_CASE("general check of Counters")
 {
 	int n = 10;
-	Population p(n);
+	Population p = n;
 	for (int i = 0; i < n; i++)
 	{
 		for (int j = 0; j < n; j++)
@@ -179,90 +180,13 @@ TEST_CASE("struct parametersCheck  constructor")
 }
 
 ////////////////////// FUNCTIONS TEST //////////////////////////
-int booleanMarker(int x)
-{
-	return (x == 0) ? 0 : 1;
-}
-int initSize()
-{
-	int sizeval;
-	return (sizeval > 5 && sizeval < 40) ? sizeval : 20;
-}
-
-bool cellMove()
-{
-	char cellMove_;
-	return (cellMove_ == 'n') ? 0 : 1;
-}
-
-auto emptyBoard(Population &pop)
-{
-	for (int i = 0; i < pop.getSize(); i++)
-	{
-		for (int j = 0; j < pop.getSize(); j++)
-		{
-			pop(i, j) = (Condition::S);
-		}
-	}
-}
-
-int adjacentInfects(Population &pop, int row, int column)
-{
-    //assert(row != 0 && column != 0);
-    auto cell = pop(row, column);
-    int result = 0;
-    //count only adjacents, not the central one
-    for (int i = row - 1; i != row + 2; ++i)
-    {
-        for (int j = column - 1; j != column + 2; ++j)
-        {
-            if (pop(i,j) == Condition::I)
-            {
-                result++;
-            }
-        }
-    }
-    switch (cell)
-    {
-    case Condition::I:
-        return (result - 1);
-        break;
-    default:
-        return result;
-        break;
-    }
-}
-
-auto cellMover(Population &pop)
-{
-
-	int iX, jX, iY, jY;
-	int redSize = static_cast<int>(pop.getSize()) - 2; //avoid swapping cells on border
-	int numOfSwaps = floor((redSize * redSize) / 10);
-	for (int i = 0; i < numOfSwaps; i++)
-	{
-
-		iX = (rand() + time(nullptr)) % (redSize) + 1;
-		jX = (rand() + time(nullptr)) % (redSize) + 1;
-		iY = (rand() + time(nullptr)) % (redSize) + 1;
-		jY = (rand() + time(nullptr)) % (redSize) + 1;
-
-		if (pop(iX, jX) != Condition::D && pop(iY, jY) != Condition::D)
-		{
-			pop.swapTwoCells(iX, jX, iY, jY);
-		}
-	}
-}
 
 TEST_CASE("functionsTest")
 {
 
 	CHECK(booleanMarker(10) == 1);
 	CHECK(typeid(booleanMarker(0.5)) == typeid(int(1))); // check that booleanMarker reads every number as integer, of course it did, otherwise this test wouldn't be here
-	CHECK(initSize() == 20);							 // check the default set of initSize
-	CHECK(cellMove() == 1);								 // check that the cells move themselves for the default option
-	
-	Population pop = 10;
+	Population pop = 10; // si sfrutta la conversione implicita grazie al costruttore Population(int n)
 	emptyBoard(pop);
 	int iTry = (rand() + time(nullptr)) % (pop.getSize());
 	int jTry = (rand() + time(nullptr)) % (pop.getSize());
@@ -275,7 +199,7 @@ TEST_CASE("functionsTest")
 	CHECK(adjacentInfects(pop, 1, 3) == 0);
 	CHECK(adjacentInfects(pop, 4, 4) == 0);
 
-	Population popz = 10; // using implicit conversion in order to avoid declaring too many int variables to construct new Population
+	Population popz = 10;
 	popz(2, 2) = Condition::I;
 	popz(2, 3) = Condition::I;
 	popz(4, 4) = Condition::I;
