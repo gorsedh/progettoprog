@@ -323,7 +323,7 @@ inline void cellMover(Population &pop)
 //this function is used for the linear #2 spread model, self explanatory
 inline int booleanMarker(int x)
 {
-   return (x == 0) ? 1 : 0;
+   return (x == 0) ? 0 : 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
