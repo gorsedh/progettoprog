@@ -315,7 +315,7 @@ void cellMover(Population &pop)
 
         if (pop(iX, jX) != Condition::D && pop(iY, jY) != Condition::D)
         {
-            pop.swapTwoCells(iX, jX, iY, jY);
+          std::swap(pop(iX, iY), pop(jX, jY));
         }
     }
 }
